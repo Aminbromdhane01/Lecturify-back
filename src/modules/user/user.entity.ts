@@ -3,22 +3,24 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id: String;
+    id: string;
     @Column()
-    firstname: String;
+    firstname: string;
     @Column()
-    lastname: String;
+    lastname: string;
     @Column()
-    email: String;
+    email: string;
     @Column()
-    password: String;
+    password: string;
     @Column()
-    picture: String;
+    picture: string;
     @Column()
     gender: Boolean;
     @Column()
-    phonenumber: String;
+    phonenumber: string;
     @Column()
-    adress: String;
+    adress: string;
+    @Column({ nullable: true })
+    refreshToken: string;
 
 }

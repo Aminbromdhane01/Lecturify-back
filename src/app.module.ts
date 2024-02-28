@@ -4,7 +4,7 @@ import { UserModule } from '@app/modules/user/user.module';
 import configuration from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from './database/data-source';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot(dataSourceOptions)
