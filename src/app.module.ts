@@ -5,9 +5,9 @@ import configuration from './config/configuration';
 @Module({
   imports: [ConfigModule.forRoot(
     {
-      cache: true,
-      isGlobal: true,
-      load: [configuration]
+     
+      isGlobal: true
+     
     }
   )],
   controllers: [],
