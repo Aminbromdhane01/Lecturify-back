@@ -9,6 +9,7 @@ import { hashData } from './helpers/hashdata';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { getTokens } from './helpers/getToken';
+import { comparePasswords } from './helpers/comparePasswords';
 
 
 @Injectable()
@@ -46,11 +47,24 @@ export class AuthService implements IAuthService {
 
     return tokens;
   }
-  singIn(signInDto: signInDto): Promise<any> {
-    throw new Error('Method not implemented.');
+  async singIn(signInDto: signInDto): Promise<any> {
+    const user = await this.userService.findUserbyemail(signInDto.email)
+
+    if (!user) {
+      throw new HttpException('Invalid email or password ', HttpStatus.BAD_REQUEST)
+    }
+    const passwordMatches = await comparePasswords(user.password, signInDto.password)
+    if (!passwordMatches) {
+      throw new HttpException('Invalid email or password ', HttpStatus.BAD_REQUEST)
+    }
+    const tokens = await getTokens(user.id, user.email, this.jwtService, this.configService);
+
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    return tokens;
+
   }
-  logOut(id: String): Promise<any> {
-    throw new Error('Method not implemented.');
+  logOut(id: string): Promise<any> {
+    return this.userService.updateUser(id, { refreshToken: null });
   }
   async updateRefreshToken(id: string, token: string): Promise<any> {
     const hashedRefreshToken = await hashData(token);
