@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { getTokens } from './helpers/getToken';
 import { comparePasswords } from './helpers/comparePasswords';
+import { User } from '../user/user.entity';
 
 
 @Injectable()
@@ -23,12 +24,20 @@ export class AuthService implements IAuthService {
     private configService: ConfigService) {
 
   }
+  async validateUser({ email, password }: signInDto): Promise<User> {
+    const user = await this.userService.findUserbyemail(email);
+    if (user && comparePasswords(user.password, password)) {
+      return user
+    }
+  }
 
 
   async signUp(createUserDto: CreateUserDto): Promise<any> {
 
     const userExists = await this.userService.findUserbyemail(
       createUserDto.email);
+    console.log(userExists);
+
 
     if (userExists) {
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
@@ -72,5 +81,17 @@ export class AuthService implements IAuthService {
       refreshToken: hashedRefreshToken,
     });
   }
+  async RefreshTokens(id: string, token: string): Promise<any> {
+    const user = await this.userService.findUserbyid(id);
+    if (!user || !user.refreshToken)
+      throw new HttpException('Access denied', HttpStatus.FORBIDDEN);
+    const refreshTokenMatches = comparePasswords(user.refreshToken, token)
+
+    if (!refreshTokenMatches) throw new HttpException('Access denied', HttpStatus.FORBIDDEN);
+    const tokens = await getTokens(user.id, user.email, this.jwtService, this.configService);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    return tokens;
+  }
+
 
 }

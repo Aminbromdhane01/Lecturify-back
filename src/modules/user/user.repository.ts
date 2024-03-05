@@ -19,11 +19,14 @@ export class UserRepository extends AbstractGenericRepository<User> implements I
     findByid(id: string): Promise<User> {
         throw new Error("Method not implemented.");
     }
-    findByemail(email: string): Promise<User> {
-        throw new Error("Method not implemented.");
+    async findByemail(email: string): Promise<User> {
+        return await this.findOne({ where: { email: email } })
     }
-    updateUser(id: string, user: UpdateUserDto): Promise<User> {
-        throw new Error("Method not implemented.");
+    async updateUser(id: string, user: UpdateUserDto): Promise<User> {
+        await this.update(id, user);
+        return await this.findOne({ where: { id: id } });
+
+
     }
 
 

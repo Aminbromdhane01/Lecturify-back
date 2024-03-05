@@ -10,9 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
   imports: [TypeOrmModule.forRoot(dataSourceOptions)
     , ConfigModule.forRoot(
       {
-        cache: true,
         isGlobal: true,
-        load: [configuration]
       }
     ), UserModule, AuthModule],
   controllers: [],
