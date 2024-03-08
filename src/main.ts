@@ -3,7 +3,7 @@ import { AppModule } from '@app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { envConfig } from '@app/config/constantes'
-require('dotenv').config();
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +16,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, configSwagger);
   SwaggerModule.setup('api', app, document);
+
 
 
   await app.listen(config.get(envConfig.PORT));

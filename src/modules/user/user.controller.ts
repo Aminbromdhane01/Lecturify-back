@@ -8,26 +8,26 @@ import { IUserService, USER_SERVICE } from './interfaces/user.service.interface'
 export class UserController {
 
 
-  constructor() { }
+
   @Inject(USER_SERVICE)
   private readonly userService: IUserService;
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto)
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.userService.findAllusers();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.userService.findUserbyid(id);
   }
   @Get('findemail/:email')
-  findOneByEmail(@Param('email') email: string) {
+  async findOneByEmail(@Param('email') email: string) {
     return this.userService.findUserbyemail(email)
   }
 

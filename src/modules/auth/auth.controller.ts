@@ -8,22 +8,22 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor() { }
+
   @Inject(AUTH_SERVICE)
   private readonly authService: IAuthService
   @Post('signin')
-  signIn(signInDto: signInDto): Promise<any> {
+  async signIn(signInDto: signInDto): Promise<any> {
 
     return this.authService.singIn(signInDto)
 
   }
   @Post('signup')
-  singUp(@Body() singUpDto: CreateUserDto): Promise<any> {
+  async singUp(@Body() singUpDto: CreateUserDto): Promise<any> {
 
     return this.authService.signUp(singUpDto)
   }
   @Get('logout')
-  logOut(id: string): Promise<any> {
+  async logOut(id: string): Promise<any> {
     return this.authService.logOut(id)
   }
 }

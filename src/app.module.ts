@@ -1,18 +1,21 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { Module, forwardRef } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from '@app/modules/user/user.module';
 import configuration from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { dataSourceOptions } from './database/data-source';
+import { AbstractDataSource } from './database/data-source';
 import { AuthModule } from './modules/auth/auth.module';
+import { ResetPasswordModule } from './modules/reset-password/reset-password.module';
+import { dataSourceOptions } from './database/data-source-options';
+import { DataBaseModule } from './database/data-source.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(dataSourceOptions)
-    , ConfigModule.forRoot(
+  imports: [
+    ConfigModule.forRoot(
       {
         isGlobal: true,
       }
-    ), UserModule, AuthModule],
+    ), UserModule, AuthModule, ResetPasswordModule, forwardRef(() => DataBaseModule)],
   controllers: [],
   providers: [],
 })
