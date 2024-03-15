@@ -1,0 +1,7 @@
+node_modules
+bin
+data
+## Added this to ignored files from eslint since it's complaining about duplicate strings like 'character varying' 
+src/entities/**/*.ts
+src/migrations/
+dist
