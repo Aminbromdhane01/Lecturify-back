@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export class ForbiddenException extends HttpException {
+export class NotFoundException extends HttpException {
   constructor(message: string) {
-    super(message, HttpStatus.FORBIDDEN);
+    super(message, HttpStatus.NOT_FOUND);
   }
 }
