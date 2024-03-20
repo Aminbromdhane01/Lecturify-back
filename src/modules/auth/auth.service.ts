@@ -12,43 +12,46 @@ import { ConfigService } from '@nestjs/config';
 import { getTokens } from '@app/modules/auth/helpers/GetToken';
 import { comparePasswords } from '@app/modules/auth/helpers/ComparePasswords';
 import { User } from '@app/modules/user/user.entity';
-import { ConflictException } from '@app/exceptions/ConflictExeption';
-import { envConfig } from '@app/config/constantes';
-import { NotFoundException } from '@app/exceptions/NotFoundExeption';
+import { envConstants } from '@app/config/constantes';
 import { generateToken } from '@app/modules/auth/helpers/GenerateResetToken';
 import {
   IMailService,
-  MAIL_TOKEN,
+  MAIL_SERVICE,
 } from '@app/modules/mail/mail.service.interface';
 import { ResetPasswordDto } from '@app/modules/auth/dto/reset-password.dto';
-import { BadRequestException } from '@app/exceptions/BadRequestException';
-import { ForbiddenException } from '@app/exceptions/ForbiddenException';
 import { SignInResponseDto } from '@app/modules/auth/dto/signin-response.dto';
+import { PasswordDoNotMatchException } from '@app/exceptions/PasswordDoNotMatchException';
+import { UserAlreadyExitsException } from '@app/exceptions/UserAlreadyExistsException';
+import { InvalidEmailOrPasswordExeption } from '@app/exceptions/InvalidEmailOrPasswordException';
+import { AccessDeniedExeption } from '@app/exceptions/AccessDeniedExeption';
+import { UserNotFoundException } from '@app/exceptions/UserNotFoundExeption';
 
 @Injectable()
 export class AuthService implements IAuthService {
-  async resetPassword({
-    token,
-    password,
-    confirmPassword,
-  }: ResetPasswordDto): Promise<User> {
+
+
+  @Inject(USER_SERVICE)
+  private readonly userService: IUserService;
+  @Inject(MAIL_SERVICE)
+  private readonly mailService: IMailService;
+  @Inject(JwtService)
+  private jwtService: JwtService;
+  @Inject(ConfigService)
+  private configService: ConfigService;
+  async resetPassword({ token, password, confirmPassword, }: ResetPasswordDto): Promise<User> {
     if (password != confirmPassword) {
-      throw new BadRequestException(envConfig.PASSWORDS_DO_NOT_MATCH);
+      throw new PasswordDoNotMatchException()
     }
 
     const user = await this.userService.findUserbyToken(token);
-    if (!user) {
-      throw new NotFoundException(envConfig.USER_NOT_FOUND_OR_TOKEN_EXPIRED);
-    }
+
 
     const hashedPassword = await hashData(password);
     return this.userService.updateUser(user.id, { password: hashedPassword });
   }
   async forgetPassword(email: string): Promise<void> {
     const user = await this.userService.findUserbyemail(email);
-    if (!user) {
-      throw new NotFoundException(envConfig.USER_NOT_FOUND);
-    }
+
     const token = generateToken();
 
     const upadatedUser = await this.userService.updateUser(user.id, {
@@ -56,7 +59,7 @@ export class AuthService implements IAuthService {
     });
 
     const resetUrl =
-      this.configService.get(envConfig.RESET_PASSWORD_URL) + token;
+      this.configService.get(envConstants.MailModule.RESET_PASSWORD_URL) + token;
 
     return this.mailService.sendResetmail({
       username: upadatedUser.firstname,
@@ -65,30 +68,32 @@ export class AuthService implements IAuthService {
     });
   }
 
-  @Inject(USER_SERVICE)
-  private readonly userService: IUserService;
-  @Inject(MAIL_TOKEN)
-  private readonly mailService: IMailService;
-  @Inject(JwtService)
-  private jwtService: JwtService;
-  @Inject(ConfigService)
-  private configService: ConfigService;
-
-  async validateUser({ email, password }: signInDto): Promise<User> {
+  async validateUser({ email, password }: signInDto): Promise<User | undefined> {
     const user = await this.userService.findUserbyemail(email);
-    if (user && comparePasswords(user.password, password)) {
+    if (user && await comparePasswords(user.password, password)) {
       return user;
     }
   }
 
   async signUp(createUserDto: CreateUserDto): Promise<SignInResponseDto> {
-    const userExists = await this.userService.findUserbyemail(
-      createUserDto.email,
-    );
-    console.log(userExists);
+
+    let userExists;
+    try {
+      userExists = await this.userService.findUserbyemail(createUserDto.email);
+      console.log(userExists);
+    } catch (error) {
+      // Handle the case where the user does not exist
+      if (error instanceof UserNotFoundException) {
+        userExists = false;
+      } else {
+        // Re-throw other exceptions
+        throw error;
+      }
+    }
+
 
     if (userExists) {
-      throw new ConflictException(envConfig.USER_ALREADY_EXISTS);
+      throw new UserAlreadyExitsException()
     }
 
     const hashedPassword = await hashData(createUserDto.password);
@@ -97,7 +102,11 @@ export class AuthService implements IAuthService {
       ...createUserDto,
       password: hashedPassword,
     });
-    console.log(newUser);
+
+    if (!newUser) {
+
+      throw new Error('Erro');
+    }
 
     const tokens = await getTokens(
       newUser.id,
@@ -105,24 +114,25 @@ export class AuthService implements IAuthService {
       this.jwtService,
       this.configService,
     );
-    console.log(tokens);
-
     await this.updateRefreshToken(newUser.id, tokens.refreshToken);
-
     return tokens;
+
+
+
+
   }
   async singIn(signInDto: signInDto): Promise<SignInResponseDto> {
     const user = await this.userService.findUserbyemail(signInDto.email);
 
     if (!user) {
-      throw new BadRequestException(envConfig.INVALID_EMAIL_OR_PASSWORD);
+      throw new InvalidEmailOrPasswordExeption()
     }
     const passwordMatches = await comparePasswords(
       user.password,
       signInDto.password,
     );
     if (!passwordMatches) {
-      throw new BadRequestException(envConfig.INVALID_EMAIL_OR_PASSWORD);
+      throw new InvalidEmailOrPasswordExeption()
     }
     const tokens = await getTokens(
       user.id,
@@ -135,7 +145,7 @@ export class AuthService implements IAuthService {
     return tokens;
   }
   async logOut(id: string): Promise<User> {
-    return await this.userService.updateUser(id, { refreshToken: null });
+    return await this.userService.updateUser(id, { refreshToken: undefined });
   }
   async updateRefreshToken(id: string, token: string): Promise<User> {
     const hashedRefreshToken = await hashData(token);
@@ -146,11 +156,11 @@ export class AuthService implements IAuthService {
   async refreshTokens(id: string, token: string): Promise<SignInResponseDto> {
     const user = await this.userService.findUserbyid(id);
     if (!user || !user.refreshToken)
-      throw new ForbiddenException(envConfig.ACCESS_DENIED);
+      throw new AccessDeniedExeption()
     const refreshTokenMatches = comparePasswords(user.refreshToken, token);
 
     if (!refreshTokenMatches)
-      throw new ForbiddenException(envConfig.ACCESS_DENIED);
+      throw new AccessDeniedExeption()
     const tokens = await getTokens(
       user.id,
       user.email,

@@ -1,18 +1,19 @@
+import { envConstants } from '@app/config/constantes';
 import { IsEmail, IsNotEmpty, Matches } from 'class-validator';
 
 export class CreateUserDto {
-  @IsNotEmpty({ message: 'First name is required' })
+  @IsNotEmpty({ message: envConstants.UserModule.FIRSTNAME_ERROR_MESSAGE })
   firstname: string;
-  @IsNotEmpty({ message: 'Last name is required' })
+  @IsNotEmpty({ message: envConstants.UserModule.LASTNAME_ERROR_MESSAGE })
   lastname: string;
-  @IsNotEmpty({ message: 'Email is required' })
+  @IsNotEmpty({ message: envConstants.UserModule.EMAIL_ERROR_MESSAGE })
   @IsEmail()
   email: string;
   @Matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+    envConstants.UserModule.PASSWORD_REG_EX,
     {
       message:
-        'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.',
+        envConstants.UserModule.PASSWORD_ERROR_MESSAGE
     },
   )
   password: string;

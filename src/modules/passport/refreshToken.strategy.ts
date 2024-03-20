@@ -17,10 +17,18 @@ export class RefreshTokenStrategy extends PassportStrategy(
   }
 
   validate(req: Request, payload: any) {
-    const refreshToken = req.get('Authorization').replace('Bearer', '').trim();
-    if (!refreshToken) {
-      throw new Error('Refresh token not provided');
+    const authHeader = req.get('Authorization');
+    if (authHeader === undefined) {
+      throw new Error('Authorization header not provided');
     }
+
+    const tokenParts = authHeader.split(' ');
+    if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
+      throw new Error('Invalid authorization header format');
+    }
+
+    const refreshToken = tokenParts[1];
+
     return { ...payload, refreshToken };
   }
 }

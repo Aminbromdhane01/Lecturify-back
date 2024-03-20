@@ -13,14 +13,11 @@ import { MailService } from '@app/modules/mail/mail.service';
   imports: [UserModule, MailModule, JwtModule.register({})],
   controllers: [AuthController],
   providers: [
-    AuthService,
     {
       provide: AUTH_SERVICE,
       useClass: AuthService,
     },
-    UserService,
-    UserRepository,
-    MailService,
+
   ],
 })
-export class AuthModule {}
+export class AuthModule { }

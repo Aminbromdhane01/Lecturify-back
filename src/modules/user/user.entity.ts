@@ -21,7 +21,7 @@ export class User {
   @Column()
   adress: string;
   @Column({ nullable: true })
-  refreshToken: string;
+  refreshToken: string
   @Column({ nullable: true })
   resetPasswordToken: string;
 }

@@ -1,11 +1,12 @@
-import { envConfig } from '@app/config/constantes';
+import { envConstants } from '@app/config/constantes';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { MailService } from '@app/modules/mail/mail.service';
-import { MAIL_TOKEN } from '@app/modules/mail/mail.service.interface';
+import { MAIL_SERVICE } from '@app/modules/mail/mail.service.interface';
+import { mailServiceProvider } from './mail.service.provider';
 
 @Module({
   imports: [
@@ -14,15 +15,15 @@ import { MAIL_TOKEN } from '@app/modules/mail/mail.service.interface';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         transport: {
-          host: configService.get<string>(envConfig.MAIL_HOST),
-          port: 587,
+          host: configService.get<string>(envConstants.MailModule.MAIL_HOST),
+          port: configService.get<number>(envConstants.MailModule.EMAIL_PORT),
           auth: {
-            user: configService.get<string>(envConfig.USER_EMAIL),
-            pass: configService.get<string>(envConfig.USER_PASSWORD),
+            user: configService.get<string>(envConstants.MailModule.USER_EMAIL),
+            pass: configService.get<string>(envConstants.MailModule.USER_PASSWORD),
           },
         },
         defaults: {
-          from: configService.get<string>(envConfig.USER_EMAIL),
+          from: configService.get<string>(envConstants.MailModule.USER_EMAIL),
         },
         template: {
           dir: join(__dirname, './templates'),
@@ -35,12 +36,8 @@ import { MAIL_TOKEN } from '@app/modules/mail/mail.service.interface';
     }),
   ],
   providers: [
-    MailService,
-    {
-      provide: MAIL_TOKEN,
-      useClass: MailService,
-    },
+    mailServiceProvider
   ],
-  exports: [MAIL_TOKEN],
+  exports: [MAIL_SERVICE],
 })
-export class MailModule {}
+export class MailModule { }

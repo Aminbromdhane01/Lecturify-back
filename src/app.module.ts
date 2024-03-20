@@ -4,18 +4,23 @@ import { UserModule } from '@app/modules/user/user.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
 import { DataBaseModule } from '@app/database/data-source.module';
 import { MailModule } from '@app/modules/mail/mail.module';
+import * as Joi from '@hapi/joi';
+import { validationSchema } from '@app/config/env.validation.schema';
+import { BcryptModule } from './modules/bcrypt/bcrypt.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validationSchema: validationSchema
     }),
     UserModule,
     AuthModule,
     MailModule,
-    forwardRef(() => DataBaseModule),
+    DataBaseModule,
+    BcryptModule
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

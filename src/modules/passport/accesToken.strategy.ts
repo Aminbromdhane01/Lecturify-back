@@ -1,4 +1,4 @@
-import { envConfig } from '@app/config/constantes';
+import { envConstants } from '@app/config/constantes';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 
@@ -12,7 +12,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get<string>(envConfig.JWT_ACCESS_SECRET),
+      secretOrKey: configService.get<string>(envConstants.JWT.JWT_ACCESS_SECRET),
     });
   }
 

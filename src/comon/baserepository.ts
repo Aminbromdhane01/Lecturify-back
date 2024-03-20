@@ -1,6 +1,6 @@
-import { DataSource, Repository, EntityTarget } from 'typeorm';
+import { DataSource, Repository, EntityTarget, ObjectLiteral } from 'typeorm';
 
-export abstract class AbstractGenericRepository<T> extends Repository<T> {
+export abstract class AbstractGenericRepository<T extends ObjectLiteral> extends Repository<T> {
   constructor(
     private readonly dataSource: DataSource,
     entity: EntityTarget<T>,
@@ -24,7 +24,7 @@ export abstract class AbstractGenericRepository<T> extends Repository<T> {
     return { data, count };
   }
 
-  async findOnebyId(alias: string, id: number): Promise<T> {
+  async findOnebyId(alias: string, id: number): Promise<T | null> {
     const foundEntity = await this.createQueryBuilder(alias)
       .where('id = :id', { id })
       .getOne();

@@ -1,4 +1,4 @@
-import { AbstractGenericRepository } from '@app/baserepository';
+import { AbstractGenericRepository } from '@app/comon/baserepository';
 import { CreateUserDto } from '@app/modules/user/dto/create-user.dto';
 import { UpdateUserDto } from '@app/modules/user/dto/update-user.dto';
 import { IUserRepository } from '@app/modules/user/interfaces/user.repository.interface';
@@ -8,12 +8,11 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class UserRepository
   extends AbstractGenericRepository<User>
-  implements IUserRepository
-{
+  implements IUserRepository {
   constructor(private readonly datasource: DataSource) {
     super(datasource, User);
   }
-  async findbyResetToken(token: string): Promise<User> {
+  async findbyResetToken(token: string): Promise<User | null> {
     return await this.findOne({ where: { resetPasswordToken: token } });
   }
 
@@ -21,13 +20,16 @@ export class UserRepository
     return await this.save(user);
   }
 
-  async findByid(id: string): Promise<User> {
+  async findByid(id: string): Promise<User | null> {
+
     return await this.findOne({ where: { id: id } });
   }
-  async findByemail(email: string): Promise<User> {
-    return await this.findOne({ where: { email: email } });
+  async findByemail(email: string): Promise<User | null> {
+    return await this.findOne({ where: { email: email } })
+
+
   }
-  async updateUser(id: string, user: UpdateUserDto): Promise<User> {
+  async updateUser(id: string, user: UpdateUserDto): Promise<User | null> {
     await this.update(id, user);
     return await this.findOne({ where: { id: id } });
   }
