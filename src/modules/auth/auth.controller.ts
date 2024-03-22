@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Inject, ValidationPipe, UsePipes } from '@nestjs/common';
+import { Controller, Get, Post, Body, Inject, ValidationPipe, UsePipes, Patch, Put } from '@nestjs/common';
 import {
   AUTH_SERVICE,
   IAuthService,
@@ -6,27 +6,30 @@ import {
 import { CreateUserDto } from '@app/modules/user/dto/create-user.dto';
 import { SignInResponseDto } from '@app/modules/auth/dto/signin-response.dto';
 import { User } from '@app/modules/user/user.entity';
-import { signInDto } from '@app/modules/auth/dto/signin-auth.dto';
+import { SignInDto } from '@app/modules/auth/dto/signin-auth.dto';
+import { SignUpDto } from './dto/signup-auth.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
   @Inject(AUTH_SERVICE)
   private readonly authService: IAuthService;
-  @Post('signin')
-  async signIn(signInCredentials: signInDto): Promise<SignInResponseDto> {
+  @Post('singin')
+  async signIn(@Body() signInCredentials: SignInDto): Promise<SignInResponseDto> {
     return this.authService.singIn(signInCredentials);
   }
   @UsePipes(ValidationPipe)
   @Post('signup')
-  async singUp(@Body() singUpDto: CreateUserDto): Promise<SignInResponseDto> {
+  async singUp(@Body() singUpDto: SignUpDto): Promise<SignInResponseDto> {
     return this.authService.signUp(singUpDto);
   }
-  @Get('logout')
-  async logOut(id: string): Promise<User> {
-    return this.authService.logOut(id);
-  }
   @Post('forget-password')
-  async forgetPassword(email: string): Promise<void> {
+  async forgetPassword(@Body() email: string): Promise<void> {
     return this.authService.forgetPassword(email);
+  }
+  @UsePipes(ValidationPipe)
+  @Put('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<User> {
+    return this.authService.resetPassword(resetPasswordDto);
   }
 }

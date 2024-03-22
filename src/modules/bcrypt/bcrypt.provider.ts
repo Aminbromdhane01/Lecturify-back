@@ -1,4 +1,4 @@
-import { envConstants } from "@app/config/constantes";
+import { envConstants } from "@app/config/constants";
 import * as bcrypt from 'bcrypt';
 
 export const BcryptProvider = {

@@ -1,6 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { envConstants } from '@app/config/constantes';
+import { envConstants } from '@app/config/constants';
 
 export async function getTokens(
   userId: string,

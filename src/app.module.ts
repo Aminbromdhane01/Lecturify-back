@@ -2,7 +2,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from '@app/modules/user/user.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
-import { DataBaseModule } from '@app/database/data-source.module';
+import { DataBaseModule } from '@app/database/database.module';
 import { MailModule } from '@app/modules/mail/mail.module';
 import * as Joi from '@hapi/joi';
 import { validationSchema } from '@app/config/env.validation.schema';

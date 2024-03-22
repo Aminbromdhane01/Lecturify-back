@@ -1,4 +1,4 @@
-import { envConstants } from '@app/config/constantes';
+import { envConstants } from '@app/config/constants';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class PasswordDoNotMatchException extends HttpException {

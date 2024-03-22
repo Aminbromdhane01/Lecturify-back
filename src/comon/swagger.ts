@@ -1,6 +1,6 @@
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
-import { envConstants } from '@app/config/constantes';
+import { envConstants } from '@app/config/constants';
 
 export function setupSwagger(app: INestApplication) {
     const documentBuilder = new DocumentBuilder()

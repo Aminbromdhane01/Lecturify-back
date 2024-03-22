@@ -1,4 +1,7 @@
 export const envConstants = {
+    Global: {
+        PORT: 3000
+    },
     PORT: 'PORT',
 
     DataBase: {
@@ -25,6 +28,17 @@ export const envConstants = {
     },
     AuthModule: {
         AUTH_SERVICE: 'AUTH_SERVICE',
+        RESET_TOKEN_DESCRIPTION: 'The token for password reset.',
+        RESET_TOKEN_EXAMPLE: 'abc123token',
+        NEW_PASSWORD_DESCRIPTION: 'The new password for the user.',
+        CONFIRM_PASSWORD_DESCRIPTION: 'Confirmation of the new password.',
+        PASSWORD_EXAMPLE: 'NewPassword123@',
+        EMAIL_DESCRIPTION: 'The email address of the user.',
+        EMAIL_EXAMPLE: 'example@example.com',
+        PASSWORD_DESCRIPTION: 'The password of the user.',
+        REFRESH_TOKEN_DESCRIPTION: 'The refresh token for the user session.',
+        ACCESS_TOKEN_DESCRIPTION: 'The access token for the user session.',
+        TOKEN_EXAMPLE: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
 
     },
 
@@ -42,7 +56,11 @@ export const envConstants = {
         PASSWORD_ERROR_MESSAGE: 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.',
         FIRSTNAME_ERROR_MESSAGE: 'First name is required',
         LASTNAME_ERROR_MESSAGE: 'Last name is required',
-        EMAIL_ERROR_MESSAGE: 'Email address is required'
+        EMAIL_ERROR_MESSAGE: 'Email address is required',
+        FIRSTNAME_DESCRIPTION: 'User First Name ',
+        FIRSTNAME_EXAMPLE: 'First Name ',
+        LASTNAME_DESCRIPTION: 'User Last Name ',
+        LASTNAME_EXAMPLE: 'Last Name '
     },
     Swagger: {
         SWAGGER_TITLE: 'Lecturify',
@@ -53,6 +71,7 @@ export const envConstants = {
     },
     Bcrypt: {
         BCRYPT: 'bcrypt',
+        SALT_ROUNDS: 'SALT_ROUNDS',
     }
 
 };

@@ -1,6 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
-import { signInDto } from '../auth/dto/signin-auth.dto';
+import { SignInDto } from '../auth/dto/signin-auth.dto';
 import { HttpException, HttpStatus, Inject } from '@nestjs/common';
 import {
   AUTH_SERVICE,
@@ -14,7 +14,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  async validate({ email, password }: signInDto) {
+  async validate({ email, password }: SignInDto) {
     const user = await this.authService.validateUser({ email, password });
 
     if (!user) return new HttpException('Unautorized', HttpStatus.UNAUTHORIZED);

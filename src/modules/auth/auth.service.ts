@@ -1,7 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { IAuthService } from '@app/modules/auth/interfaces/auth.service.interface';
-import { signInDto } from '@app/modules/auth/dto/signin-auth.dto';
+import { SignInDto } from '@app/modules/auth/dto/signin-auth.dto';
 import { CreateUserDto } from '@app/modules/user/dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
+
 import {
   IUserService,
   USER_SERVICE,
@@ -12,7 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { getTokens } from '@app/modules/auth/helpers/GetToken';
 import { comparePasswords } from '@app/modules/auth/helpers/ComparePasswords';
 import { User } from '@app/modules/user/user.entity';
-import { envConstants } from '@app/config/constantes';
+import { envConstants } from '@app/config/constants';
 import { generateToken } from '@app/modules/auth/helpers/GenerateResetToken';
 import {
   IMailService,
@@ -25,6 +27,8 @@ import { UserAlreadyExitsException } from '@app/exceptions/UserAlreadyExistsExce
 import { InvalidEmailOrPasswordExeption } from '@app/exceptions/InvalidEmailOrPasswordException';
 import { AccessDeniedExeption } from '@app/exceptions/AccessDeniedExeption';
 import { UserNotFoundException } from '@app/exceptions/UserNotFoundExeption';
+import { log } from 'console';
+import { BCRYPT_SERVICE, IBcryptService } from '../bcrypt/bcrypt.service.interface';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -34,14 +38,16 @@ export class AuthService implements IAuthService {
   private readonly userService: IUserService;
   @Inject(MAIL_SERVICE)
   private readonly mailService: IMailService;
+  @Inject(BCRYPT_SERVICE)
+  private readonly bcryptService: IBcryptService;
   @Inject(JwtService)
   private jwtService: JwtService;
   @Inject(ConfigService)
   private configService: ConfigService;
   async resetPassword({ token, password, confirmPassword, }: ResetPasswordDto): Promise<User> {
-    if (password != confirmPassword) {
+    /*if (password != confirmPassword) {
       throw new PasswordDoNotMatchException()
-    }
+    }*/
 
     const user = await this.userService.findUserbyToken(token);
 
@@ -68,7 +74,7 @@ export class AuthService implements IAuthService {
     });
   }
 
-  async validateUser({ email, password }: signInDto): Promise<User | undefined> {
+  async validateUser({ email, password }: SignInDto): Promise<User | undefined> {
     const user = await this.userService.findUserbyemail(email);
     if (user && await comparePasswords(user.password, password)) {
       return user;
@@ -82,11 +88,9 @@ export class AuthService implements IAuthService {
       userExists = await this.userService.findUserbyemail(createUserDto.email);
       console.log(userExists);
     } catch (error) {
-      // Handle the case where the user does not exist
       if (error instanceof UserNotFoundException) {
         userExists = false;
       } else {
-        // Re-throw other exceptions
         throw error;
       }
     }
@@ -95,8 +99,10 @@ export class AuthService implements IAuthService {
     if (userExists) {
       throw new UserAlreadyExitsException()
     }
+    const saltRounds = await this.configService.get(envConstants.Bcrypt.SALT_ROUNDS)
 
-    const hashedPassword = await hashData(createUserDto.password);
+
+    const hashedPassword = await this.bcryptService.hashData(createUserDto.password, saltRounds)
 
     const newUser = await this.userService.createUser({
       ...createUserDto,
@@ -105,7 +111,7 @@ export class AuthService implements IAuthService {
 
     if (!newUser) {
 
-      throw new Error('Erro');
+      throw new NotFoundException()
     }
 
     const tokens = await getTokens(
@@ -121,17 +127,25 @@ export class AuthService implements IAuthService {
 
 
   }
-  async singIn(signInDto: signInDto): Promise<SignInResponseDto> {
+  async singIn(signInDto: SignInDto): Promise<SignInResponseDto> {
+    console.log(signInDto.email);
+
     const user = await this.userService.findUserbyemail(signInDto.email);
+    console.log(user);
+
 
     if (!user) {
+      console.log('email');
+
       throw new InvalidEmailOrPasswordExeption()
     }
-    const passwordMatches = await comparePasswords(
-      user.password,
-      signInDto.password,
-    );
+
+
+    const passwordMatches = await this.bcryptService.comparePasswords(signInDto.password, user.password);
+    console.log(passwordMatches);
+
     if (!passwordMatches) {
+      console.log('password');
       throw new InvalidEmailOrPasswordExeption()
     }
     const tokens = await getTokens(
