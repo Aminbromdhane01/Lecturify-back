@@ -39,7 +39,9 @@ export const envConstants = {
         REFRESH_TOKEN_DESCRIPTION: 'The refresh token for the user session.',
         ACCESS_TOKEN_DESCRIPTION: 'The access token for the user session.',
         TOKEN_EXAMPLE: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-
+        RESET_TOKEN_EXPIRE_IN: 'RESET_TOKEN_EXPIRE_IN',
+        RESET_TOKEN_SECRET_KEY: 'RESET_TOKEN_SECRET_KEY',
+        INAVALID_EMAIL_MESSAGE: 'Invalid email address format'
     },
 
     HttpExceptionsMessage: {
@@ -72,6 +74,13 @@ export const envConstants = {
     Bcrypt: {
         BCRYPT: 'bcrypt',
         SALT_ROUNDS: 'SALT_ROUNDS',
+    },
+    validationDecorators: {
+        IS_STRING_MESSAGE: 'must be a string',
+        IS_STRING_WITH_MESSAGE_NAME: 'isStringWithMessage',
+        IS_NOTEMPTY_MESSAGE: 'must not be empty',
+        IS_NOTEMPTY_WITH_MESSAGE_NAME: 'isNotEmptyWithMessage'
+
     }
 
 };

@@ -24,7 +24,7 @@ export class SignUpDto {
         example: envConstants.AuthModule.EMAIL_EXAMPLE
     })
     @IsNotEmpty({ message: envConstants.UserModule.EMAIL_ERROR_MESSAGE })
-    @IsEmail()
+    @IsEmail({}, { message: envConstants.AuthModule.INAVALID_EMAIL_MESSAGE })
     email: string;
     @ApiProperty({
         description: envConstants.AuthModule.PASSWORD_DESCRIPTION,

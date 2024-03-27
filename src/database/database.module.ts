@@ -2,23 +2,21 @@ import { envConstants } from '@app/config/constants';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { DatabaseType } from 'typeorm';
+import { DataSource, DataSourceOptions, DatabaseType } from 'typeorm';
+import { getOrmOptions } from './data-source';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule.forRoot({
+        isGlobal: true,
+      })],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService): TypeOrmModuleOptions => ({
-        type: "mysql",
-        host: configService.get<string>(envConstants.DataBase.DATABASE_HOST),
-        port: configService.get<number>(envConstants.DataBase.DATABASE_PORT),
-        username: configService.get<string>(envConstants.DataBase.DATABASE_USERNAME),
-        password: configService.get<string>(envConstants.DataBase.DATABASE_PASSWORD),
-        database: configService.get<string>(envConstants.DataBase.DATABASE_NAME),
-        entities: ['dist/**/*.entity{.ts,.js}'],
-        migrations: ['dist/database/migrations/*.js'],
-      }),
+      useFactory: (configService: ConfigService) => {
+
+        return getOrmOptions(configService);
+      },
+
     }),
   ],
 })

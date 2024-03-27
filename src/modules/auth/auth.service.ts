@@ -2,8 +2,6 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { IAuthService } from '@app/modules/auth/interfaces/auth.service.interface';
 import { SignInDto } from '@app/modules/auth/dto/signin-auth.dto';
 import { CreateUserDto } from '@app/modules/user/dto/create-user.dto';
-import * as bcrypt from 'bcrypt';
-
 import {
   IUserService,
   USER_SERVICE,
@@ -15,19 +13,16 @@ import { getTokens } from '@app/modules/auth/helpers/GetToken';
 import { comparePasswords } from '@app/modules/auth/helpers/ComparePasswords';
 import { User } from '@app/modules/user/user.entity';
 import { envConstants } from '@app/config/constants';
-import { generateToken } from '@app/modules/auth/helpers/GenerateResetToken';
 import {
   IMailService,
   MAIL_SERVICE,
 } from '@app/modules/mail/mail.service.interface';
 import { ResetPasswordDto } from '@app/modules/auth/dto/reset-password.dto';
 import { SignInResponseDto } from '@app/modules/auth/dto/signin-response.dto';
-import { PasswordDoNotMatchException } from '@app/exceptions/PasswordDoNotMatchException';
 import { UserAlreadyExitsException } from '@app/exceptions/UserAlreadyExistsException';
 import { InvalidEmailOrPasswordExeption } from '@app/exceptions/InvalidEmailOrPasswordException';
 import { AccessDeniedExeption } from '@app/exceptions/AccessDeniedExeption';
 import { UserNotFoundException } from '@app/exceptions/UserNotFoundExeption';
-import { log } from 'console';
 import { BCRYPT_SERVICE, IBcryptService } from '../bcrypt/bcrypt.service.interface';
 
 @Injectable()
@@ -57,9 +52,12 @@ export class AuthService implements IAuthService {
   }
   async forgetPassword(email: string): Promise<void> {
     const user = await this.userService.findUserbyemail(email);
-
-    const token = generateToken();
-
+    const expiresIn = this.configService.get(envConstants.AuthModule.RESET_TOKEN_EXPIRE_IN)
+    const secretKey = this.configService.get(envConstants.AuthModule.RESET_TOKEN_SECRET_KEY)
+    const token = this.jwtService.sign({ email }, { expiresIn, secret: secretKey });
+    if (!user) {
+      throw new UserNotFoundException()
+    }
     const upadatedUser = await this.userService.updateUser(user.id, {
       resetPasswordToken: token,
     });
@@ -90,11 +88,10 @@ export class AuthService implements IAuthService {
     } catch (error) {
       if (error instanceof UserNotFoundException) {
         userExists = false;
-      } else {
-        throw error;
       }
     }
 
+    console.log(userExists);
 
     if (userExists) {
       throw new UserAlreadyExitsException()
@@ -135,8 +132,6 @@ export class AuthService implements IAuthService {
 
 
     if (!user) {
-      console.log('email');
-
       throw new InvalidEmailOrPasswordExeption()
     }
 
@@ -145,7 +140,6 @@ export class AuthService implements IAuthService {
     console.log(passwordMatches);
 
     if (!passwordMatches) {
-      console.log('password');
       throw new InvalidEmailOrPasswordExeption()
     }
     const tokens = await getTokens(

@@ -7,7 +7,7 @@ export interface IUserService {
   createUser(user: CreateUserDto): Promise<User>;
   findAllusers(): Promise<{ data: User[]; count: number }>;
   findUserbyid(id: string): Promise<User>;
-  findUserbyemail(email: string): Promise<User>;
+  findUserbyemail(email: string): Promise<User | null>;
   deleteUser(id: string): Promise<number>;
   updateUser(id: string, user: UpdateUserDto): Promise<User>;
   findUserbyToken(token: string): Promise<User>;

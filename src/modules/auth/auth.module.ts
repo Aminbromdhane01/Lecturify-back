@@ -3,15 +3,14 @@ import { AuthController } from '@app/modules/auth/auth.controller';
 import { UserModule } from '@app/modules/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from '@app/modules/mail/mail.module';
-import { authServiceProvider } from './auth.service.provider';
+import { authProviders } from './providers/auth.provider';
 import { BcryptModule } from '../bcrypt/bcrypt.module';
 
 @Module({
   imports: [UserModule, MailModule, JwtModule.register({}), BcryptModule],
   controllers: [AuthController],
   providers: [
-    authServiceProvider
-
+    ...authProviders
   ],
 })
 export class AuthModule { }

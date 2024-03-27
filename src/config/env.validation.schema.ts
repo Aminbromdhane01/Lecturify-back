@@ -17,5 +17,7 @@ export const validationSchema = Joi.object({
     EMAIL_FROM: Joi.string().required(),
     EMAIL_PORT: Joi.number().required(),
     SALT_ROUNDS: Joi.number().required(),
+    RESET_TOKEN_EXPIRE_IN: Joi.string().required(),
+    RESET_TOKEN_SECRET_KEY: Joi.string().required(),
 
 });

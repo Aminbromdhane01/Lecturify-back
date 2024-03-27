@@ -1,16 +1,22 @@
 import { PartialType } from '@nestjs/swagger';
 import { CreateUserDto } from '@app/modules/user/dto/create-user.dto';
-import { IsString } from 'class-validator';
+import { IsStringWithMessage } from '@app/decorators/is-string-with-message.decorator';
+import { IsNotEmptyWithMessage } from '@app/decorators/is-notempty-with-message.decorator';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-  @IsString()
+  @IsStringWithMessage()
+  @IsNotEmptyWithMessage()
   picture?: string;
-  @IsString()
+  @IsStringWithMessage()
+  @IsNotEmptyWithMessage()
   phonenumber?: string;
-  @IsString()
+  @IsStringWithMessage()
+  @IsNotEmptyWithMessage()
   adress?: string;
-  @IsString()
+  @IsStringWithMessage()
+  @IsNotEmptyWithMessage()
   refreshToken?: string;
-  @IsString()
+  @IsStringWithMessage()
+  @IsNotEmptyWithMessage()
   resetPasswordToken?: string;
 }

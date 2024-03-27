@@ -1,15 +1,17 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { envConstants } from "@app/config/constants";
+import { ConfigService } from "@nestjs/config";
+import { DataSourceOptions } from "typeorm";
 
-export const dataSourceOptions: DataSourceOptions = {
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: '',
-  database: 'lecturify',
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: ['dist/database/migrations/*.js'],
-};
 
-const dataSource = new DataSource(dataSourceOptions);
-export default dataSource;
+export function getOrmOptions(configService: ConfigService): DataSourceOptions {
+  return {
+    type: "mysql",
+    host: configService.get<string>(envConstants.DataBase.DATABASE_HOST),
+    port: configService.get<number>(envConstants.DataBase.DATABASE_PORT),
+    username: configService.get<string>(envConstants.DataBase.DATABASE_USERNAME),
+    password: configService.get<string>(envConstants.DataBase.DATABASE_PASSWORD),
+    database: configService.get<string>(envConstants.DataBase.DATABASE_NAME),
+    entities: ['dist/**/*.entity{.ts,.js}'],
+    migrations: ['dist/database/migrations/*.js'],
+  };
+}
