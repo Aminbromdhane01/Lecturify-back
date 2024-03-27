@@ -1,9 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude, Expose, Transform } from 'class-transformer';
 enum UserRole {
   USER = 'USER',
   ADMIN = 'ADMIN',
   AUTHOR = 'AUTHOR',
 }
+
+
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -15,10 +19,12 @@ export class User {
   @Column()
   email: string;
   @Column()
+  @Exclude()
   password: string;
   @Column()
   picture: string;
   @Column()
+  @Exclude()
   gender: boolean;
   @Column()
   phonenumber: string;
@@ -30,5 +36,18 @@ export class User {
   resetPasswordToken: string;
   // @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   //role: UserRole
+
+  @Expose()
+  get fullName(): string {
+    return this.firstname + ' ' + this.lastname
+  }
+  @Expose()
+  @Transform(({ value }) => value ? 'female' : 'male')
+  get genderText(): string {
+    return this.gender ? 'female' : 'male';
+  }
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 
 }
