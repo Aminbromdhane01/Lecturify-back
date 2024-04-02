@@ -24,6 +24,8 @@ export const envConstants = {
         MAIL_TOKEN: 'MAIL_TOKEN',
         RESET_PASSWORD_URL: 'RESET_PASSWORD_URL',
         EMAIL_PORT: 'EMAIL_PORT',
+        EMAIL_NOT_SENT: 'Error in sending reset mail',
+        EMAIL_SENT: 'Your password reset request has been successfully processed. Please check your inbox for further instructions.'
 
     },
     AuthModule: {
@@ -41,7 +43,9 @@ export const envConstants = {
         TOKEN_EXAMPLE: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
         RESET_TOKEN_EXPIRE_IN: 'RESET_TOKEN_EXPIRE_IN',
         RESET_TOKEN_SECRET_KEY: 'RESET_TOKEN_SECRET_KEY',
-        INAVALID_EMAIL_MESSAGE: 'Invalid email address format'
+        INAVALID_EMAIL_MESSAGE: 'Invalid email address format',
+        USER_ID_ARG: 'sub',
+        REFRESH_TOKEN_ARG: 'refreshToken'
     },
 
     HttpExceptionsMessage: {
@@ -52,6 +56,8 @@ export const envConstants = {
         PASSWORDS_DO_NOT_MATCH: 'Passwords do not match',
         USER_NOT_FOUND_OR_TOKEN_EXPIRED: 'User not found or token expired',
         AUTH_SERVICE_TOKEN: 'AUTH_SERVICE',
+        INVALID_TOKEN_RESPONSE_MESSAGE: 'Invalid token',
+        FAILED_TO_UPDATE_USER_MESSAGE: 'Failed to update user. Please try again later',
     },
     UserModule: {
         PASSWORD_REG_EX: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
@@ -78,9 +84,15 @@ export const envConstants = {
     validationDecorators: {
         IS_STRING_MESSAGE: 'must be a string',
         IS_STRING_WITH_MESSAGE_NAME: 'isStringWithMessage',
-        IS_NOTEMPTY_MESSAGE: 'must not be empty',
+        IS_NOTEMPTY_MESSAGE: 'is required',
         IS_NOTEMPTY_WITH_MESSAGE_NAME: 'isNotEmptyWithMessage'
 
+    },
+    Passport: {
+        AUTHORIZATION: 'Authorization',
+        AUTHORIZATION_HEADER_NOT_PROVIDED: 'Authorization header not provided',
+        INVALID_AUTHORIZATION_HEADER_FORMAT: 'Invalid authorization header format',
+        BEARER: 'Bearer'
     }
 
 };
