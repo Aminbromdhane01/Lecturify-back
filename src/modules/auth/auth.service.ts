@@ -23,6 +23,7 @@ import { AccessDeniedExeption } from '@app/exceptions/AccessDeniedExeption';
 import { UserNotFoundException } from '@app/exceptions/UserNotFoundExeption';
 import { BCRYPT_SERVICE, IBcryptService } from '@app/modules/bcrypt/bcrypt.service.interface';
 import { ForgetPasswordResponseDto } from '@app/modules/auth/dto/forget-password-response.dto';
+import { RefreshTokeneResponseDto } from './dto/refresh-token-response-dto';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -110,7 +111,8 @@ export class AuthService implements IAuthService {
       this.configService,
     );
     await this.updateRefreshToken(newUser.id, tokens.refreshToken);
-    return tokens;
+    return { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, fullName: newUser.firstname + ' ' + newUser.lastname, email: newUser.firstname + ' ' + newUser.email };
+
   }
   async singIn(signInDto: SignInDto): Promise<SignInResponseDto> {
     const user = await this.userService.findUserbyemail(signInDto.email);
@@ -131,7 +133,7 @@ export class AuthService implements IAuthService {
     );
 
     await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    return { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, fullName: user.firstname + ' ' + user.lastname, email: user.email };
   }
 
   async updateRefreshToken(id: string, token: string): Promise<User> {
@@ -141,7 +143,7 @@ export class AuthService implements IAuthService {
       refreshToken: hashedRefreshToken,
     });
   }
-  async refreshTokens(id: string, token: string): Promise<SignInResponseDto> {
+  async refreshTokens(id: string, token: string): Promise<RefreshTokeneResponseDto> {
     const user = await this.userService.findUserbyid(id);
     if (!user || !user.refreshToken)
       throw new AccessDeniedExeption()
@@ -156,6 +158,6 @@ export class AuthService implements IAuthService {
       this.configService,
     );
     await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    return { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken };
   }
 }

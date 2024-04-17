@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Inject, ValidationPipe, UsePipes, Put, Req, UseGuards, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Inject, ValidationPipe, UsePipes, Put, Req, UseGuards, Res, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import {
   AUTH_SERVICE,
   IAuthService,
@@ -13,6 +13,7 @@ import { ForgetDto } from '@app/modules/auth/dto/forget-password.dto';
 import { ForgetPasswordResponseDto } from '@app/modules/auth/dto/forget-password-response.dto';
 import { RefreshTokenRequest } from '@app/modules/auth/interfaces/auth.refreshtoken.request.interface';
 import { envConstants } from '@app/config/constants';
+import { RefreshTokeneResponseDto } from './dto/refresh-token-response-dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,8 +25,10 @@ export class AuthController {
     return this.authService.singIn(signInCredentials);
   }
   @UsePipes(ValidationPipe)
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('signup')
-  async singUp(@Body() singUpDto: SignUpDto): Promise<SignInResponseDto> {
+  async singUp(@Body() singUpDto: SignUpDto
+  ): Promise<SignInResponseDto> {
     return await this.authService.signUp(singUpDto);
   }
   @UsePipes(ValidationPipe)
@@ -41,7 +44,7 @@ export class AuthController {
   @UsePipes(ValidationPipe)
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
-  async refreshToekn(@Req() req: RefreshTokenRequest): Promise<SignInResponseDto> {
+  async refreshToekn(@Req() req: RefreshTokenRequest): Promise<RefreshTokeneResponseDto> {
     const userId = req.user[envConstants.AuthModule.USER_ID_ARG];
     const refreshToken = req.user[envConstants.AuthModule.REFRESH_TOKEN_ARG]
     return this.authService.refreshTokens(userId, refreshToken);

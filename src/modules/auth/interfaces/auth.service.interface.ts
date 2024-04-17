@@ -5,12 +5,13 @@ import { SignInResponseDto } from '@app/modules/auth/dto/signin-response.dto';
 import { envConstants } from '@app/config/constants';
 import { CreateUserDto } from '@app/modules/user/dto/create-user.dto';
 import { ForgetPasswordResponseDto } from '@app/modules/auth/dto/forget-password-response.dto';
+import { RefreshTokeneResponseDto } from '../dto/refresh-token-response-dto';
 export const AUTH_SERVICE = envConstants.AuthModule.AUTH_SERVICE;
 export interface IAuthService {
   signUp(createUserDto: CreateUserDto): Promise<SignInResponseDto>;
   singIn(signInDto: SignInDto): Promise<SignInResponseDto>;
   updateRefreshToken(id: string, token: string): Promise<User>;
-  refreshTokens(id: string, token: string): Promise<SignInResponseDto>;
+  refreshTokens(id: string, token: string): Promise<RefreshTokeneResponseDto>;
   forgetPassword(email: string): Promise<ForgetPasswordResponseDto>;
   resetPassword({
     token,

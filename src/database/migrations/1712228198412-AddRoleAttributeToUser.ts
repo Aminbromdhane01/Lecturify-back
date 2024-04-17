@@ -1,9 +1,10 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddRoleColumnToUserEntity1711460716602 implements MigrationInterface {
-    name = 'AddRoleColumnToUserEntity1711460716602'
+export class AddRoleAttributeToUser1712228198412 implements MigrationInterface {
+    name = 'AddRoleAttributeToUser1712228198412'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`user\` ADD \`role\` enum ('USER', 'ADMIN', 'AUTHOR') NOT NULL DEFAULT 'USER'`);
         await queryRunner.query(`ALTER TABLE \`user\` CHANGE \`refreshToken\` \`refreshToken\` varchar(255) NULL`);
         await queryRunner.query(`ALTER TABLE \`user\` CHANGE \`resetPasswordToken\` \`resetPasswordToken\` varchar(255) NULL`);
     }
@@ -11,6 +12,7 @@ export class AddRoleColumnToUserEntity1711460716602 implements MigrationInterfac
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE \`user\` CHANGE \`resetPasswordToken\` \`resetPasswordToken\` varchar(255) NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`user\` CHANGE \`refreshToken\` \`refreshToken\` varchar(255) NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`user\` DROP COLUMN \`role\``);
     }
 
 }

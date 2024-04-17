@@ -45,7 +45,8 @@ export const envConstants = {
         RESET_TOKEN_SECRET_KEY: 'RESET_TOKEN_SECRET_KEY',
         INAVALID_EMAIL_MESSAGE: 'Invalid email address format',
         USER_ID_ARG: 'sub',
-        REFRESH_TOKEN_ARG: 'refreshToken'
+        REFRESH_TOKEN_ARG: 'refreshToken',
+        FULL_NAME_DESCRIPTION: 'User Full Name',
     },
 
     HttpExceptionsMessage: {
