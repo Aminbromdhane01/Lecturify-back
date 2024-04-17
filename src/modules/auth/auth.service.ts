@@ -111,7 +111,7 @@ export class AuthService implements IAuthService {
       this.configService,
     );
     await this.updateRefreshToken(newUser.id, tokens.refreshToken);
-    return { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, fullName: newUser.firstname + ' ' + newUser.lastname, email: newUser.firstname + ' ' + newUser.email };
+    return { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, fullName: newUser.firstname + ' ' + newUser.lastname, email: newUser.email };
 
   }
   async singIn(signInDto: SignInDto): Promise<SignInResponseDto> {
