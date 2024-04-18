@@ -17,3 +17,5 @@ const CloudinaryProvider: Provider[] = [
         inject: [ConfigService]
     }
 ]
+
+export { CloudinaryProvider }
