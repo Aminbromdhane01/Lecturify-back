@@ -13,7 +13,7 @@ export class MailService implements IMailService {
     return this.mailerService.sendMail({
       to: email,
       subject: 'Reset Password',
-      template: '/mail',
+      template: './template/mail',
       context: {
         username,
         resetLink: link,

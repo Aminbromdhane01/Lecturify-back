@@ -6,11 +6,9 @@ import {
   IUserService,
   USER_SERVICE,
 } from '@app/modules/user/interfaces/user.service.interface';
-import { hashData } from '@app/modules/auth/helpers/HashData';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { getTokens } from '@app/modules/auth/helpers/GetToken';
-import { comparePasswords } from '@app/modules/auth/helpers/ComparePasswords';
 import { User } from '@app/modules/user/user.entity';
 import { envConstants } from '@app/config/constants';
 import {
@@ -23,7 +21,9 @@ import { UserAlreadyExitsException } from '@app/exceptions/UserAlreadyExistsExce
 import { InvalidEmailOrPasswordExeption } from '@app/exceptions/InvalidEmailOrPasswordException';
 import { AccessDeniedExeption } from '@app/exceptions/AccessDeniedExeption';
 import { UserNotFoundException } from '@app/exceptions/UserNotFoundExeption';
-import { BCRYPT_SERVICE, IBcryptService } from '../bcrypt/bcrypt.service.interface';
+import { BCRYPT_SERVICE, IBcryptService } from '@app/modules/bcrypt/bcrypt.service.interface';
+import { ForgetPasswordResponseDto } from '@app/modules/auth/dto/forget-password-response.dto';
+import { RefreshTokeneResponseDto } from './dto/refresh-token-response-dto';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -40,18 +40,15 @@ export class AuthService implements IAuthService {
   @Inject(ConfigService)
   private configService: ConfigService;
   async resetPassword({ token, password, confirmPassword, }: ResetPasswordDto): Promise<User> {
-    /*if (password != confirmPassword) {
-      throw new PasswordDoNotMatchException()
-    }*/
-
     const user = await this.userService.findUserbyToken(token);
-
-
-    const hashedPassword = await hashData(password);
+    const saltRounds = await this.configService.get(envConstants.Bcrypt.SALT_ROUNDS)
+    const hashedPassword = await this.bcryptService.hashData(password, saltRounds);
     return this.userService.updateUser(user.id, { password: hashedPassword });
   }
-  async forgetPassword(email: string): Promise<void> {
+  async forgetPassword(email: string): Promise<ForgetPasswordResponseDto> {
     const user = await this.userService.findUserbyemail(email);
+    console.log(email);
+
     const expiresIn = this.configService.get(envConstants.AuthModule.RESET_TOKEN_EXPIRE_IN)
     const secretKey = this.configService.get(envConstants.AuthModule.RESET_TOKEN_SECRET_KEY)
     const token = this.jwtService.sign({ email }, { expiresIn, secret: secretKey });
@@ -64,20 +61,21 @@ export class AuthService implements IAuthService {
 
     const resetUrl =
       this.configService.get(envConstants.MailModule.RESET_PASSWORD_URL) + token;
+    console.log(resetUrl);
 
-    return this.mailService.sendResetmail({
+    const mailSent = this.mailService.sendResetmail({
       username: upadatedUser.firstname,
       email: upadatedUser.email,
       link: resetUrl,
+
     });
+    if (!mailSent) {
+      return { message: envConstants.MailModule.EMAIL_NOT_SENT }
+    }
+    return { message: envConstants.MailModule.EMAIL_SENT }
   }
 
-  async validateUser({ email, password }: SignInDto): Promise<User | undefined> {
-    const user = await this.userService.findUserbyemail(email);
-    if (user && await comparePasswords(user.password, password)) {
-      return user;
-    }
-  }
+
 
   async signUp(createUserDto: CreateUserDto): Promise<SignInResponseDto> {
 
@@ -90,15 +88,10 @@ export class AuthService implements IAuthService {
         userExists = false;
       }
     }
-
-    console.log(userExists);
-
     if (userExists) {
       throw new UserAlreadyExitsException()
     }
     const saltRounds = await this.configService.get(envConstants.Bcrypt.SALT_ROUNDS)
-
-
     const hashedPassword = await this.bcryptService.hashData(createUserDto.password, saltRounds)
 
     const newUser = await this.userService.createUser({
@@ -118,24 +111,14 @@ export class AuthService implements IAuthService {
       this.configService,
     );
     await this.updateRefreshToken(newUser.id, tokens.refreshToken);
-    return tokens;
-
-
-
+    return { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, fullName: newUser.firstname + ' ' + newUser.lastname, email: newUser.email };
 
   }
   async singIn(signInDto: SignInDto): Promise<SignInResponseDto> {
-    console.log(signInDto.email);
-
     const user = await this.userService.findUserbyemail(signInDto.email);
-    console.log(user);
-
-
     if (!user) {
       throw new InvalidEmailOrPasswordExeption()
     }
-
-
     const passwordMatches = await this.bcryptService.comparePasswords(signInDto.password, user.password);
     console.log(passwordMatches);
 
@@ -150,22 +133,21 @@ export class AuthService implements IAuthService {
     );
 
     await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    return { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, fullName: user.firstname + ' ' + user.lastname, email: user.email };
   }
-  async logOut(id: string): Promise<User> {
-    return await this.userService.updateUser(id, { refreshToken: undefined });
-  }
+
   async updateRefreshToken(id: string, token: string): Promise<User> {
-    const hashedRefreshToken = await hashData(token);
+    const saltRounds = await this.configService.get(envConstants.Bcrypt.SALT_ROUNDS)
+    const hashedRefreshToken = await this.bcryptService.hashData(token, saltRounds);
     return await this.userService.updateUser(id, {
       refreshToken: hashedRefreshToken,
     });
   }
-  async refreshTokens(id: string, token: string): Promise<SignInResponseDto> {
+  async refreshTokens(id: string, token: string): Promise<RefreshTokeneResponseDto> {
     const user = await this.userService.findUserbyid(id);
     if (!user || !user.refreshToken)
       throw new AccessDeniedExeption()
-    const refreshTokenMatches = comparePasswords(user.refreshToken, token);
+    const refreshTokenMatches = await this.bcryptService.comparePasswords(user.refreshToken, token);
 
     if (!refreshTokenMatches)
       throw new AccessDeniedExeption()
@@ -176,6 +158,6 @@ export class AuthService implements IAuthService {
       this.configService,
     );
     await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    return { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken };
   }
 }

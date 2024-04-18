@@ -1,4 +1,5 @@
 import { envConstants } from '@app/config/constants';
+import { IsNotEmptyWithMessage } from '@app/decorators/is-notempty-with-message.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, Matches } from 'class-validator';
 
@@ -23,7 +24,7 @@ export class SignUpDto {
         description: envConstants.AuthModule.EMAIL_DESCRIPTION,
         example: envConstants.AuthModule.EMAIL_EXAMPLE
     })
-    @IsNotEmpty({ message: envConstants.UserModule.EMAIL_ERROR_MESSAGE })
+    @IsNotEmptyWithMessage()
     @IsEmail({}, { message: envConstants.AuthModule.INAVALID_EMAIL_MESSAGE })
     email: string;
     @ApiProperty({

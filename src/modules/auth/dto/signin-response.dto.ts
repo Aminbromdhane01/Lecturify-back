@@ -13,4 +13,10 @@ export class SignInResponseDto {
     example: envConstants.AuthModule.TOKEN_EXAMPLE,
   })
   accessToken: string;
+  @ApiProperty({
+    description: envConstants.AuthModule.EMAIL_DESCRIPTION
+  })
+  email: string
+  @ApiProperty({ description: envConstants.AuthModule.FULL_NAME_DESCRIPTION })
+  fullName: string
 }

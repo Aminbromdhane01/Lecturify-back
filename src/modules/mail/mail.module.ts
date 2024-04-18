@@ -3,10 +3,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { join } from 'path';
-import { MailService } from '@app/modules/mail/mail.service';
 import { MAIL_SERVICE } from '@app/modules/mail/mail.service.interface';
-import { mailProvider } from './mail.provider';
+import { mailProvider } from '@app/modules/mail/mail.provider';
 
 @Module({
   imports: [
@@ -26,7 +24,7 @@ import { mailProvider } from './mail.provider';
           from: configService.get<string>(envConstants.MailModule.USER_EMAIL),
         },
         template: {
-          dir: join(__dirname, './templates'),
+          dir: 'src/modules/mail',
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,

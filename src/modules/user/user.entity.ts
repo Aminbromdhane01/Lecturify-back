@@ -34,8 +34,7 @@ export class User {
   refreshToken: string
   @Column({ nullable: true })
   resetPasswordToken: string;
-  // @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
-  //role: UserRole
+
 
   @Expose()
   get fullName(): string {

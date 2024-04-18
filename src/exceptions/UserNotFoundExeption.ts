@@ -1,7 +1,8 @@
+import { envConstants } from '@app/config/constants';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class UserNotFoundException extends HttpException {
     constructor() {
-        super('User not FoundDD', HttpStatus.NOT_FOUND);
+        super(envConstants.HttpExceptionsMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 }
