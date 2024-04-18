@@ -3,6 +3,7 @@ import { IFileUploadService } from "./interfaces/file-upload.service.interface";
 import { FileDelteResponseDto } from "../dto/file-delete.dto";
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryResponse } from "./file-upload.type";
+import { envConstants } from "@app/config/constants";
 
 const streamifier = require('streamifier');
 
@@ -24,7 +25,7 @@ export class FileUploadService implements IFileUploadService {
     deleteFileByUrl(url: string): Promise<FileDelteResponseDto> {
         const publicId = this.getPublicIdFromUrl(url);
         if (!publicId) {
-            return Promise.reject(new Error('Invalid Cloudinary URL'));
+            return Promise.reject(new Error(envConstants.Cloudinary.INVALID_URL_ERROR_MESSAGE));
         }
 
         return this.deleteFile(publicId);

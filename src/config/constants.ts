@@ -101,7 +101,8 @@ export const envConstants = {
         CLOUD_NAME: 'CLOUD_NAME',
         CLOUD_KEY: 'CLOUD_KEY',
         CLOUD_SECRET: 'CLOUD_SECRET',
-        FILE_UPLOAD_SERVICE: 'FILE_UPLOAD_SERVICE'
+        FILE_UPLOAD_SERVICE: 'FILE_UPLOAD_SERVICE',
+        INVALID_URL_ERROR_MESSAGE: 'Invalid Cloudinary URL'
     }
 
 };
