@@ -19,5 +19,8 @@ export const validationSchema = Joi.object({
     SALT_ROUNDS: Joi.number().required(),
     RESET_TOKEN_EXPIRE_IN: Joi.string().required(),
     RESET_TOKEN_SECRET_KEY: Joi.string().required(),
+    CLOUD_SECRET: Joi.string().required(),
+    CLOUD_KEY: Joi.string().required(),
+    CLOUD_NAME: Joi.string().required()
 
 });
