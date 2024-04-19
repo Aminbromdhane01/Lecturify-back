@@ -114,6 +114,7 @@ export const envConstants = {
         UPLOADED_FILE_TYPE_IS_NOT_SUPPORTED_MESSAGE: 'Uploaded file type is not supported',
         UPLOADED_PDF_FILE_MAX_SIZE_MESSSAGE: 'Uploaded PDF file exceeds maximum size (50MB)',
         UPLOADED_IMAGE_MAX_SIZE_MESSSAGE: 'Uploaded image exceeds maximum size (3MB)',
+        PDF_MIMETYPE: 'application/pdf'
     }
 
 };

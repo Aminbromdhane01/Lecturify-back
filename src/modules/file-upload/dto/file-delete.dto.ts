@@ -3,5 +3,5 @@ export class FileDelteResponseDto {
     message?: string;
 }
 export class LocalFileDeleteResponseDto {
-    messaage: string
+    message: string
 }
