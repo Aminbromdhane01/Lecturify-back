@@ -1,9 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { IFileUploadService } from "./interfaces/file-upload.service.interface";
-import { FileDelteResponseDto } from "../dto/file-delete.dto";
+import { FileDelteResponseDto, LocalFileDeleteResponseDto } from "./dto/file-delete.dto";
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryResponse } from "./file-upload.type";
 import { envConstants } from "@app/config/constants";
+import * as fs from 'fs';
+
+import * as path from 'path';
 
 const streamifier = require('streamifier');
 
@@ -49,5 +52,16 @@ export class FileUploadService implements IFileUploadService {
             });
         });
     }
+    async deleteLocalImage(filename: string): Promise<LocalFileDeleteResponseDto> {
+        const imagePath = path.join(envConstants.LocalImageUpload.LOCAL_IMAGE_UPLOAD_DESTINATION, filename);
 
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+            return { message: envConstants.LocalImageUpload.LOCAL_IMAGE_DELETED_SUCCESSFULY_IMAGE };
+        } else {
+            return { message: envConstants.LocalImageUpload.LOCAL_IMAGE_NOT_FOUND_MESSAGE };
+        }
+    }
 }
+
+

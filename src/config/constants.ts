@@ -103,6 +103,17 @@ export const envConstants = {
         CLOUD_SECRET: 'CLOUD_SECRET',
         FILE_UPLOAD_SERVICE: 'FILE_UPLOAD_SERVICE',
         INVALID_URL_ERROR_MESSAGE: 'Invalid Cloudinary URL'
+    },
+    LocalImageUpload: {
+        LOCAL_IMAGE_DELETED_SUCCESSFULY_IMAGE: 'Image deleted successfully',
+        LOCAL_IMAGE_NOT_FOUND_MESSAGE: 'Image not found',
+        LOCAL_IMAGE_UPLOAD_DESTINATION: 'uploads',
+        UPLOADED_FILE_IS_INVALID_MESSAGE: 'Uploaded file is invalid',
+        ALLOWED_FILE_TYPES: ['image/jpeg', 'image/png', 'application/pdf'],
+        ALLOWED_FILE_EXTENSIONS: ['.jpeg', '.jpg', '.png', '.pdf'],
+        UPLOADED_FILE_TYPE_IS_NOT_SUPPORTED_MESSAGE: 'Uploaded file type is not supported',
+        UPLOADED_PDF_FILE_MAX_SIZE_MESSSAGE: 'Uploaded PDF file exceeds maximum size (50MB)',
+        UPLOADED_IMAGE_MAX_SIZE_MESSSAGE: 'Uploaded image exceeds maximum size (3MB)',
     }
 
 };
