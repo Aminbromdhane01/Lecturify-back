@@ -9,8 +9,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class FileUploadValidationPipe implements PipeTransform {
-    @Inject(ConfigService)
-    private configService: ConfigService;
+    constructor(private maxSize: number) { }
     transform(file: Express.Multer.File): Express.Multer.File {
         if (!file || !file.mimetype) {
             throw new InvalidUploadedFileException()
@@ -26,12 +25,8 @@ export class FileUploadValidationPipe implements PipeTransform {
             throw new UploadedTypeIsNotSupportedException();
         }
 
-        if (file.mimetype === envConstants.LocalImageUpload.PDF_MIMETYPE && (!file.size || file.size > this.configService.get(envConstants.LocalImageUpload.MAX_SIZE_PDF))) {
-            throw new PdfFileMaxSizeException();
-        }
-
-        if (!file.size || file.size > this.configService.get(envConstants.LocalImageUpload.MAX_SIZE_IMAGE)) {
-            throw new ImageMaxSizeException();
+        if (!file.size || file.size > this.maxSize) {
+            throw new ImageMaxSizeException(this.maxSize);
         }
 
         return file;
