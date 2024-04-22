@@ -117,7 +117,10 @@ export const envConstants = {
         PDF_MIMETYPE: 'application/pdf',
         FILE_INTERCEPTOR_FIELDNAME: 'file',
         FILES_INTERCEPTOR_FIELDNAME: 'files',
-        FIELS_INTERCEPTOR_MAX_COUNT: 10
+        FIELS_INTERCEPTOR_MAX_COUNT: 10,
+        MAX_SIZE_PDF: 'MAC_SIZE_PDF',
+        MAX_SIZE_IMAGE: 'MAC_SIZE_IMAGE',
+
     }
 
 };

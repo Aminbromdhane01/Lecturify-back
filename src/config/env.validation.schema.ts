@@ -21,6 +21,7 @@ export const validationSchema = Joi.object({
     RESET_TOKEN_SECRET_KEY: Joi.string().required(),
     CLOUD_SECRET: Joi.string().required(),
     CLOUD_KEY: Joi.string().required(),
-    CLOUD_NAME: Joi.string().required()
-
+    CLOUD_NAME: Joi.string().required(),
+    MAX_SIZE_PDF: Joi.number().required(),
+    MAX_SIZE_IMAGE: Joi.number().required(),
 });
