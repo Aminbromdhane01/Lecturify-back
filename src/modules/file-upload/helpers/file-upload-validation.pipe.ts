@@ -9,19 +9,12 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class FileUploadValidationPipe implements PipeTransform {
-    constructor(private maxSize: number) { }
+    constructor(private maxSize: number, private allowedMimeTypes: string[]) { }
     transform(file: Express.Multer.File): Express.Multer.File {
         if (!file || !file.mimetype) {
             throw new InvalidUploadedFileException()
         }
-
-        const allowedFileTypes = envConstants.LocalImageUpload.ALLOWED_FILE_TYPES;
-        const allowedFileExtensions = envConstants.LocalImageUpload.ALLOWED_FILE_EXTENSIONS;
-
-        const isValidType = allowedFileTypes.includes(file.mimetype);
-        const isValidExtension = allowedFileExtensions.some(ext => file.originalname.endsWith(ext));
-
-        if (!isValidType || !isValidExtension) {
+        if (!this.allowedMimeTypes.includes(file.mimetype)) {
             throw new UploadedTypeIsNotSupportedException();
         }
 
