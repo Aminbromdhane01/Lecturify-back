@@ -120,7 +120,6 @@ export const envConstants = {
         FIELS_INTERCEPTOR_MAX_COUNT: 10,
         MAX_SIZE_PDF: 'MAC_SIZE_PDF',
         MAX_SIZE_IMAGE: 'MAC_SIZE_IMAGE',
-
     }
 
 };
