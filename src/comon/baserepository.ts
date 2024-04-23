@@ -1,6 +1,9 @@
-import { DataSource, Repository, EntityTarget, ObjectLiteral } from 'typeorm';
+import type { DataSource, EntityTarget, ObjectLiteral } from 'typeorm';
+import { Repository } from 'typeorm';
 
-export abstract class AbstractGenericRepository<T extends ObjectLiteral> extends Repository<T> {
+export abstract class AbstractGenericRepository<
+  T extends ObjectLiteral,
+> extends Repository<T> {
   constructor(
     private readonly dataSource: DataSource,
     entity: EntityTarget<T>,
@@ -21,20 +24,22 @@ export abstract class AbstractGenericRepository<T extends ObjectLiteral> extends
       .skip(page * itemsPerPage)
       .take(itemsPerPage)
       .getManyAndCount();
+
     return { data, count };
   }
 
   async findOnebyId(alias: string, id: number): Promise<T | null> {
-    const foundEntity = await this.createQueryBuilder(alias)
+    return this.createQueryBuilder(alias)
       .where('id = :id', { id })
       .getOne();
-    return foundEntity;
   }
+
   async deleteItem(alias: string, id: number): Promise<number> {
     const deleteResult = await this.createQueryBuilder(alias)
       .delete()
       .where('id = :id', { id })
       .execute();
+
     return deleteResult.affected ?? 0;
   }
 }

@@ -1,8 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
-
 import type { IResetMailDto } from '@app/modules/mail/dto/reset-mail.dto';
 import type { IMailService } from '@app/modules/mail/mail.service.interface';
+import { Inject, Injectable } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class MailService implements IMailService {

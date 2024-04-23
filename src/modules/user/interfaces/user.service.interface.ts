@@ -1,6 +1,6 @@
-import { CreateUserDto } from '@app/modules/user/dto/create-user.dto';
-import { UpdateUserDto } from '@app/modules/user/dto/update-user.dto';
-import { User } from '@app/modules/user/user.entity';
+import type { CreateUserDto } from '@app/modules/user/dto/create-user.dto';
+import type { UpdateUserDto } from '@app/modules/user/dto/update-user.dto';
+import type { User } from '@app/modules/user/user.entity';
 
 export const USER_SERVICE = 'USER_SERVICE';
 export interface IUserService {

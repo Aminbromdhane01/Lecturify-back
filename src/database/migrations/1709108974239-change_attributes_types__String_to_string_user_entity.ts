@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class ChangeAttributesTypes_StringToStringUserEntity1709108974239
   implements MigrationInterface
