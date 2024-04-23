@@ -1,6 +1,6 @@
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { envConstants } from '@app/config/constants';
+import type { ConfigService } from '@nestjs/config';
+import type { JwtService } from '@nestjs/jwt';
 
 export async function getTokens(
   userId: string,
@@ -15,7 +15,9 @@ export async function getTokens(
         username,
       },
       {
-        secret: configService.get<string>(envConstants.JWT.JWT_ACCESS_SECRET),
+        secret: configService.get<string>(
+          envConstants.JWT.JWT_ACCESS_SECRET,
+        ),
         expiresIn: '15m',
       },
     ),
@@ -25,7 +27,9 @@ export async function getTokens(
         username,
       },
       {
-        secret: configService.get<string>(envConstants.JWT.JWT_REFRESH_SECRET),
+        secret: configService.get<string>(
+          envConstants.JWT.JWT_REFRESH_SECRET,
+        ),
         expiresIn: '7d',
       },
     ),

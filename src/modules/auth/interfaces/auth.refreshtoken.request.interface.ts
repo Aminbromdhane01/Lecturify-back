@@ -1,6 +1,6 @@
 export interface RefreshTokenRequest extends Request {
-    user: {
-        sub: string;
-        refreshToken: string;
-    };
+  user: {
+    sub: string;
+    refreshToken: string;
+  };
 }

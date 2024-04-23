@@ -1,10 +1,4 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 
-export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor() {
-    super();
-  }
-
-
-}
+export class LocalStrategy extends PassportStrategy(Strategy) {}
