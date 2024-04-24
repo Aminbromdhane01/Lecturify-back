@@ -4,11 +4,11 @@ import {
   Catch,
   HttpException,
   HttpStatus,
-  Inject,
   Injectable,
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { isValidationOptions } from 'class-validator';
 import type { Response } from 'express';
 
 @Injectable()
@@ -16,52 +16,61 @@ import type { Response } from 'express';
 export class HttpExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(HttpExceptionFilter.name);
 
-  @Inject(ConfigService)
-  private readonly configService: ConfigService;
+  constructor(private readonly configService: ConfigService) {}
 
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
 
-    let errorMessage;
+    let errorMessage: string | string[] | undefined;
 
-    switch (status) {
-      case HttpStatus.BAD_REQUEST: {
-        errorMessage = envConstants.ErrorMessage.BAD_REQUEST;
-        break;
-      }
+    // Check if exception response is a string
+    const exceptionResponse = exception.getResponse();
 
-      case HttpStatus.UNAUTHORIZED: {
-        errorMessage = envConstants.ErrorMessage.UNAUTHORIZED;
-        break;
-      }
+    if (typeof exceptionResponse === 'string') {
+      errorMessage = exceptionResponse;
+    } else if (
+      isValidationOptions(exceptionResponse) &&
+      exceptionResponse.message
+    ) {
+      errorMessage = exceptionResponse.message as string;
+    } else {
+      switch (status) {
+        case HttpStatus.BAD_REQUEST: {
+          errorMessage = envConstants.ErrorMessage.BAD_REQUEST;
+          break;
+        }
 
-      case HttpStatus.FORBIDDEN: {
-        errorMessage = envConstants.ErrorMessage.FORBIDDEN;
-        break;
-      }
+        case HttpStatus.UNAUTHORIZED: {
+          errorMessage = envConstants.ErrorMessage.UNAUTHORIZED;
+          break;
+        }
 
-      case HttpStatus.NOT_FOUND: {
-        errorMessage = envConstants.ErrorMessage.NOT_FOUND;
-        break;
-      }
+        case HttpStatus.FORBIDDEN: {
+          errorMessage = envConstants.ErrorMessage.FORBIDDEN;
+          break;
+        }
 
-      case HttpStatus.CONFLICT: {
-        errorMessage = envConstants.ErrorMessage.CONFLICT;
-        break;
-      }
+        case HttpStatus.NOT_FOUND: {
+          errorMessage = envConstants.ErrorMessage.NOT_FOUND;
+          break;
+        }
 
-      default: {
-        errorMessage = envConstants.ErrorMessage.INTERNAL_SERVER_ERROR;
-        break;
+        case HttpStatus.CONFLICT: {
+          errorMessage = envConstants.ErrorMessage.CONFLICT;
+          break;
+        }
+
+        default: {
+          errorMessage = envConstants.ErrorMessage.INTERNAL_SERVER_ERROR;
+          break;
+        }
       }
     }
 
-    exception.message = errorMessage;
-
     if (
-      this.configService.get(envConstants.NODE_ENV) ===
+      this.configService.get<string>(envConstants.NODE_ENV) ===
       envConstants.PRODUCTION
     ) {
       return response.status(status).json({

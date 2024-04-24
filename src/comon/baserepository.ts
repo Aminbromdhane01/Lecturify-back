@@ -1,5 +1,6 @@
 import type { DataSource, EntityTarget, ObjectLiteral } from 'typeorm';
 import { Repository } from 'typeorm';
+import type { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export abstract class AbstractGenericRepository<
   T extends ObjectLiteral,
@@ -41,5 +42,28 @@ export abstract class AbstractGenericRepository<
       .execute();
 
     return deleteResult.affected ?? 0;
+  }
+
+  async createItem(alias: string, item: Partial<T>): Promise<T> {
+    const newItem = await this.createQueryBuilder(alias)
+      .insert()
+      .values(item as QueryDeepPartialEntity<T>)
+      .execute();
+
+    return newItem.raw;
+  }
+
+  async updateItem(
+    alias: string,
+    id: number,
+    item: Partial<T>,
+  ): Promise<T | null> {
+    await this.createQueryBuilder(alias)
+      .update()
+      .set(item as QueryDeepPartialEntity<T>)
+      .where('id = :id', { id })
+      .execute();
+
+    return this.findOnebyId(alias, id);
   }
 }

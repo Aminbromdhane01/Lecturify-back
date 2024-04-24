@@ -9,7 +9,6 @@ async function bootstrap() {
   const migarate = await NestFactory.create(DataBaseModule);
   const configService = migarate.get(ConfigService);
   const dataoptions = getOrmOptions(configService);
-  console.log(dataoptions);
 
   return new DataSource(dataoptions);
 }

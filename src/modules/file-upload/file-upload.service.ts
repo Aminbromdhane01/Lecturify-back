@@ -2,7 +2,8 @@ import { envConstants } from '@app/config/constants';
 import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
 import * as fs from 'fs';
-import * as path from 'path';
+import path from 'path';
+import * as streamifier from 'streamifier';
 
 import type {
   FileDelteResponseDto,
@@ -10,8 +11,6 @@ import type {
 } from './dto/file-delete.dto';
 import type { CloudinaryResponse } from './file-upload.type';
 import type { IFileUploadService } from './interfaces/file-upload.service.interface';
-
-const streamifier = require('streamifier');
 
 @Injectable()
 export class FileUploadService implements IFileUploadService {
@@ -52,20 +51,23 @@ export class FileUploadService implements IFileUploadService {
       return null;
     }
 
-    const deleteUrl = urlParts.at(-1).split('.')[0];
-    console.log(deleteUrl);
+    const lastPart = urlParts.at(-1);
 
-    return deleteUrl;
+    if (!lastPart) {
+      return null;
+    }
+
+    return lastPart.split('.')[0];
   }
 
   deleteFile(publicId: string): Promise<FileDelteResponseDto> {
     return new Promise<FileDelteResponseDto>((resolve, reject) => {
-      cloudinary.uploader.destroy(publicId, (error, result) => {
+      void cloudinary.uploader.destroy(publicId, (error, result) => {
         if (error) {
           return reject(error);
         }
 
-        resolve(result);
+        resolve(result as FileDelteResponseDto);
       });
     });
   }
