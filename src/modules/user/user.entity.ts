@@ -1,10 +1,12 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-enum UserRole {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-  AUTHOR = 'AUTHOR',
-}
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+
+import { Book } from '../book/book.entity';
 
 @Entity()
 export class User {
@@ -42,6 +44,9 @@ export class User {
 
   @Column({ nullable: true })
   resetPasswordToken: string;
+
+  @OneToMany(() => Book, (book) => book.user)
+  books: Book[];
 
   @Expose()
   get fullName(): string {

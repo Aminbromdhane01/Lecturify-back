@@ -4,6 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import type { ConfigOptions } from 'cloudinary';
 import { v2 } from 'cloudinary';
 
+import { FileUploadService } from '../file-upload.service';
+import { FILE_UPLOAD_SERVICE } from '../interfaces/file-upload.service.interface';
+
 const CloudinaryProvider: Provider[] = [
   {
     provide: envConstants.Cloudinary.CLOUDINARY,
@@ -16,6 +19,10 @@ const CloudinaryProvider: Provider[] = [
         ),
       }),
     inject: [ConfigService],
+  },
+  {
+    provide: FILE_UPLOAD_SERVICE,
+    useClass: FileUploadService,
   },
 ];
 
