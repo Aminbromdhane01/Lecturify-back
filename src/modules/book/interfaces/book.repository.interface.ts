@@ -16,4 +16,9 @@ export interface IBookRepository {
   getBookbyId(id: number): Promise<Book | null>;
   deleteBook(id: number): Promise<number>;
   updateBook(id: number, book: UpdateBookDto): Promise<Book | null>;
+  findAllByTitle({
+    itemPerPage,
+    page,
+    keyword,
+  }: GetBooksByPaginationDto): Promise<{ data: Book[]; count: number }>;
 }

@@ -25,4 +25,9 @@ export interface IBookService {
     content: Express.Multer.File | undefined,
     image: Express.Multer.File | undefined,
   ): Promise<Book | null>;
+  findAllByTitle({
+    itemPerPage,
+    page,
+    keyword,
+  }: GetBooksByPaginationDto): Promise<{ data: Book[]; count: number }>;
 }

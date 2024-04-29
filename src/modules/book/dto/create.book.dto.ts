@@ -4,19 +4,18 @@ import { IsStringWithMessage } from '@app/decorators/is-string-with-message.deco
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateBookDto {
+  @IsNotEmptyWithMessage()
+  @IsStringWithMessage()
   @ApiProperty({
     description: envConstants.BookModule.BOOK_TITLE_DESCRIPTION,
     example: envConstants.BookModule.BOOK_TITLE_EXAMPLE,
   })
-  @IsNotEmptyWithMessage()
-  @IsStringWithMessage()
   title: string;
 
   @ApiProperty({
     description: envConstants.BookModule.BOOK_CONTENT_DESCRIPTION,
     example: envConstants.BookModule.BOOK_CONTENT_EXAMPLE,
   })
-  @IsNotEmptyWithMessage()
   content: string;
 
   @ApiProperty({
@@ -25,26 +24,17 @@ export class CreateBookDto {
   })
   image: string;
 
-  @ApiProperty({
-    description: envConstants.BookModule.DATE_DESCRIPTION,
-    example: envConstants.BookModule.DATE_EXAMPLE,
-  })
+  @IsNotEmptyWithMessage()
+  @IsStringWithMessage()
   @ApiProperty({
     description: envConstants.BookModule.GENRE_DESCRIPTION,
     example: envConstants.BookModule.GENRE_EXAMPLE,
   })
-  @IsNotEmptyWithMessage()
-  @IsStringWithMessage()
   genre: string;
 
-  @ApiProperty({
-    description: envConstants.BookModule.BOOK_RATING_DESCRIPTION,
-    example: envConstants.BookModule.BOOK_RATING_EXAMPLE,
-  })
   @ApiProperty({
     description: envConstants.BookModule.USER_ID_DESCRIPTION,
     example: envConstants.BookModule.USER_ID_EXAMPLE,
   })
-  @IsNotEmptyWithMessage()
   userId: number;
 }

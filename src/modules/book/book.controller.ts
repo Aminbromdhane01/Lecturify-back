@@ -12,6 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 
 import type { Book } from './book.entity';
 import { CreateBookDto } from './dto/create.book.dto';
@@ -21,7 +22,7 @@ import {
   BOOK_SERVICE,
   IBookService,
 } from './interfaces/book.service.interface';
-
+@ApiTags('cats')
 @Controller('books')
 export class BookController {
   @Inject(BOOK_SERVICE) private readonly bookService: IBookService;
@@ -84,5 +85,12 @@ export class BookController {
     }
 
     return this.bookService.updateBook(id, updatedBook, pdf, image);
+  }
+
+  @Get('search/title')
+  async searchByTitle(
+    @Query() getBookDto: GetBooksByPaginationDto,
+  ): Promise<{ data: Book[]; count: number }> {
+    return this.bookService.findAllByTitle(getBookDto);
   }
 }
