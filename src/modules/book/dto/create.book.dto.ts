@@ -12,16 +12,8 @@ export class CreateBookDto {
   })
   title: string;
 
-  @ApiProperty({
-    description: envConstants.BookModule.BOOK_CONTENT_DESCRIPTION,
-    example: envConstants.BookModule.BOOK_CONTENT_EXAMPLE,
-  })
   content: string;
 
-  @ApiProperty({
-    description: envConstants.BookModule.IMAGE_URL_DESCRIPTION,
-    example: envConstants.BookModule.IMAGE_URL_EXAMPLE,
-  })
   image: string;
 
   @IsNotEmptyWithMessage()
@@ -31,6 +23,16 @@ export class CreateBookDto {
     example: envConstants.BookModule.GENRE_EXAMPLE,
   })
   genre: string;
+
+  @ApiProperty({
+    type: envConstants.BookModule.FILES_ARRAY_TYPE,
+    items: {
+      type: envConstants.BookModule.FILES_ARRAY_ITEMS_TYPE,
+      format: envConstants.BookModule.FILES_ARRAY_ITEMS_FORMAT,
+    },
+    description: envConstants.BookModule.FILES_ARRAY_DESCRIPTION,
+  })
+  files?: Express.Multer.File[];
 
   @ApiProperty({
     description: envConstants.BookModule.USER_ID_DESCRIPTION,

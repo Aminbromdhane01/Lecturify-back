@@ -12,12 +12,18 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import type { Book } from './book.entity';
 import { CreateBookDto } from './dto/create.book.dto';
 import { GetBooksByPaginationDto } from './dto/get-book-by-pagination.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import {
+  ApiItemPerPageQuery,
+  ApiKeywordQuery,
+  ApiPageQuery,
+  ApiSearchByTitleOkResponse,
+} from './helpers/swagger-annotations';
 import {
   BOOK_SERVICE,
   IBookService,
@@ -29,6 +35,10 @@ export class BookController {
 
   @Post()
   @UseInterceptors(FilesInterceptor('files', 2))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: CreateBookDto,
+  })
   async createBook(
     @UploadedFiles() files: Express.Multer.File[],
     @Body() createBookDto: CreateBookDto,
@@ -87,6 +97,10 @@ export class BookController {
     return this.bookService.updateBook(id, updatedBook, pdf, image);
   }
 
+  @ApiSearchByTitleOkResponse
+  @ApiItemPerPageQuery
+  @ApiPageQuery
+  @ApiKeywordQuery
   @Get('search/title')
   async searchByTitle(
     @Query() getBookDto: GetBooksByPaginationDto,

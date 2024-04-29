@@ -160,5 +160,18 @@ export const envConstants = {
     USER_ID_EXAMPLE: 123,
     BOOK_REPOSITORY: 'BOOK_REPOSITORY',
     BOOK_SERVICE: 'BOOK_SERVICE',
+    FILES_ARRAY_TYPE: 'array',
+    FILES_ARRAY_ITEMS_TYPE: 'string',
+    FILES_ARRAY_ITEMS_FORMAT: 'binary',
+    FILES_ARRAY_DESCRIPTION: 'Array of files to upload',
+    SwaggerDocumentation: {
+      API_OK_RESPONSE_DESCRIPTION: 'List of books found by title',
+      ITEM_PER_PAGE_QUERY_NAME: 'itemPerPage',
+      ITEM_PER_PAGE_QUERY_DESCRIPTION: 'Number of items per page',
+      PAGE_QUERY_NAME: 'page',
+      PAGE_QUERY_DESCRIPTION: 'Page number',
+      KEYWORD_QUERY_NAME: 'keyword',
+      KEYWORD_QUERY_DESCRIPTION: 'Keyword description',
+    },
   },
 };
