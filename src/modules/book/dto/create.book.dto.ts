@@ -4,47 +4,39 @@ import { IsStringWithMessage } from '@app/decorators/is-string-with-message.deco
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateBookDto {
+  @IsNotEmptyWithMessage()
+  @IsStringWithMessage()
   @ApiProperty({
     description: envConstants.BookModule.BOOK_TITLE_DESCRIPTION,
     example: envConstants.BookModule.BOOK_TITLE_EXAMPLE,
   })
-  @IsNotEmptyWithMessage()
-  @IsStringWithMessage()
   title: string;
 
-  @ApiProperty({
-    description: envConstants.BookModule.BOOK_CONTENT_DESCRIPTION,
-    example: envConstants.BookModule.BOOK_CONTENT_EXAMPLE,
-  })
-  @IsNotEmptyWithMessage()
   content: string;
 
-  @ApiProperty({
-    description: envConstants.BookModule.IMAGE_URL_DESCRIPTION,
-    example: envConstants.BookModule.IMAGE_URL_EXAMPLE,
-  })
   image: string;
 
-  @ApiProperty({
-    description: envConstants.BookModule.DATE_DESCRIPTION,
-    example: envConstants.BookModule.DATE_EXAMPLE,
-  })
+  @IsNotEmptyWithMessage()
+  @IsStringWithMessage()
   @ApiProperty({
     description: envConstants.BookModule.GENRE_DESCRIPTION,
     example: envConstants.BookModule.GENRE_EXAMPLE,
   })
-  @IsNotEmptyWithMessage()
-  @IsStringWithMessage()
   genre: string;
 
   @ApiProperty({
-    description: envConstants.BookModule.BOOK_RATING_DESCRIPTION,
-    example: envConstants.BookModule.BOOK_RATING_EXAMPLE,
+    type: envConstants.BookModule.FILES_ARRAY_TYPE,
+    items: {
+      type: envConstants.BookModule.FILES_ARRAY_ITEMS_TYPE,
+      format: envConstants.BookModule.FILES_ARRAY_ITEMS_FORMAT,
+    },
+    description: envConstants.BookModule.FILES_ARRAY_DESCRIPTION,
   })
+  files?: Express.Multer.File[];
+
   @ApiProperty({
     description: envConstants.BookModule.USER_ID_DESCRIPTION,
     example: envConstants.BookModule.USER_ID_EXAMPLE,
   })
-  @IsNotEmptyWithMessage()
   userId: number;
 }

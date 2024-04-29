@@ -8,7 +8,6 @@ export class GetBooksByPaginationDto {
   @IsNotEmptyWithMessage()
   page: number;
 
-  @IsNotEmptyWithMessage()
   @IsString()
   keyword: string;
 }

@@ -73,4 +73,16 @@ export class BookService implements IBookService {
 
     return this.bookRepository.updateBook(id, book);
   }
+
+  findAllByTitle({
+    itemPerPage,
+    page,
+    keyword,
+  }: GetBooksByPaginationDto): Promise<{ data: Book[]; count: number }> {
+    return this.bookRepository.findAllByTitle({
+      itemPerPage,
+      page,
+      keyword,
+    });
+  }
 }

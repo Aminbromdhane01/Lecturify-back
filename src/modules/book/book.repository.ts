@@ -46,4 +46,18 @@ export class BookReposotiroy
   updateBook(id: number, book: UpdateBookDto): Promise<Book | null> {
     return this.updateItem('Book', id, book);
   }
+
+  async findAllByTitle({
+    itemPerPage,
+    page,
+    keyword,
+  }: GetBooksByPaginationDto): Promise<{ data: Book[]; count: number }> {
+    const [data, count] = await this.createQueryBuilder('Book')
+      .where('title LIKE :keyword', { keyword: `%${keyword}%` })
+      .skip(page * itemPerPage)
+      .take(itemPerPage)
+      .getManyAndCount();
+
+    return { data, count };
+  }
 }
