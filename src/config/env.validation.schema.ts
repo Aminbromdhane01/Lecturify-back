@@ -25,4 +25,6 @@ export const validationSchema = Joi.object({
   MAX_SIZE_PDF: Joi.number().required(),
   MAX_SIZE_IMAGE: Joi.number().required(),
   NODE_ENV: Joi.string().required(),
+  ANALYSIS_TYPE: Joi.string().required(),
+  MODEL_IDENTIFIER: Joi.string().required(),
 });

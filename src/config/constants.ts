@@ -174,4 +174,12 @@ export const envConstants = {
       KEYWORD_QUERY_DESCRIPTION: 'Keyword description',
     },
   },
+  SentimentAnalysisModule: {
+    MODEL_IDENTIFIER: 'MODEL_IDENTIFIER',
+    ANALYSIS_TYPE: 'ANALYSIS_TYPE',
+    SENTIMENT_ABUSIVE: 'Abusive',
+    SENTIMENT_NEGATIVE: 'Negative',
+    SENTIMENT_NEUTRAL: 'Neutral',
+    SENTIMENT_POSITIVE: 'Positive',
+  },
 };
