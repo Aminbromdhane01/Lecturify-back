@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { BcryptModule } from './modules/bcrypt/bcrypt.module';
 import { BookModule } from './modules/book/book.module';
+import { SentimentalAnalysisModule } from './modules/sentimental-analysis/sentimental-analysis.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { BookModule } from './modules/book/book.module';
     DataBaseModule,
     BcryptModule,
     BookModule,
+    SentimentalAnalysisModule,
   ],
   controllers: [],
   providers: [],
