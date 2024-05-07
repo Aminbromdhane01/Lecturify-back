@@ -9,4 +9,6 @@ export interface IUserRepository extends AbstractGenericRepository<User> {
   findByemail(email: string): Promise<User | null>;
   updateUser(id: string, user: UpdateUserDto): Promise<User | null>;
   findbyResetToken(token: string): Promise<User | null>;
+  findUserWishlist(id: number): Promise<User | null>;
+  saveUser(user: User): Promise<User>;
 }

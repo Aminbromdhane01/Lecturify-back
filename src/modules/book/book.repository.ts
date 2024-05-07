@@ -60,4 +60,14 @@ export class BookReposotiroy
 
     return { data, count };
   }
+
+  async getBooksByUserId(
+    userId: number,
+  ): Promise<{ data: Book[]; count: number }> {
+    const [data, count] = await this.createQueryBuilder('book')
+      .where('book.userId = :userId', { userId })
+      .getManyAndCount();
+
+    return { data, count };
+  }
 }

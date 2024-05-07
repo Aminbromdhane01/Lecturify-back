@@ -8,7 +8,7 @@ import {
 } from '@app/modules/user/interfaces/user.repository.interface';
 import type { IUserService } from '@app/modules/user/interfaces/user.service.interface';
 import type { User } from '@app/modules/user/user.entity';
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -63,5 +63,13 @@ export class UserService implements IUserService {
     }
 
     return UpadatedUser;
+  }
+
+  async findUserWishlist(id: number): Promise<User | null> {
+    return this.userRepository.findUserWishlist(id);
+  }
+
+  async saveUser(user: User): Promise<User> {
+    return this.userRepository.saveUser(user);
   }
 }

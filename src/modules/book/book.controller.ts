@@ -14,7 +14,9 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+import type { User } from '../user/user.entity';
 import type { Book } from './book.entity';
+import { AddBookToWishlistDto } from './dto/add-book-to-wishlist.dto';
 import { CreateBookDto } from './dto/create.book.dto';
 import { GetBooksByPaginationDto } from './dto/get-book-by-pagination.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -106,5 +108,19 @@ export class BookController {
     @Query() getBookDto: GetBooksByPaginationDto,
   ): Promise<{ data: Book[]; count: number }> {
     return this.bookService.findAllByTitle(getBookDto);
+  }
+
+  @Post('wishlist')
+  async addToWishlist(
+    @Body() addToWislistdto: AddBookToWishlistDto,
+  ): Promise<User | void> {
+    return this.bookService.addBookToWishlist(addToWislistdto);
+  }
+
+  @Get('get/userId')
+  async getBookbyuserId(
+    @Query() { userId }: { userId: number },
+  ): Promise<{ data: Book[]; count: number }> {
+    return this.bookService.getBooksByUserId(Number(userId));
   }
 }

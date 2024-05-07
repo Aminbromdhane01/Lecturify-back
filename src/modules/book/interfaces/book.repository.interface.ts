@@ -21,4 +21,7 @@ export interface IBookRepository {
     page,
     keyword,
   }: GetBooksByPaginationDto): Promise<{ data: Book[]; count: number }>;
+  getBooksByUserId(
+    userId: number,
+  ): Promise<{ data: Book[]; count: number }>;
 }

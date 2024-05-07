@@ -19,6 +19,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
+import type { User } from './user.entity';
+
 @Controller('user')
 export class UserController {
   @Inject(USER_SERVICE)
@@ -55,5 +57,12 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.deleteUser(id);
+  }
+
+  @Get('get/wishlist')
+  async getUserWishlist(
+    @Body() { id }: { id: number },
+  ): Promise<User | null> {
+    return this.userService.findUserWishlist(id);
   }
 }

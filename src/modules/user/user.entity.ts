@@ -2,11 +2,18 @@ import { Exclude, Expose, Transform } from 'class-transformer';
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { Book } from '../book/book.entity';
+export enum UserRole {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+  AUTHOR = 'AUTHOR',
+}
 
 @Entity()
 export class User {
@@ -45,8 +52,15 @@ export class User {
   @Column({ nullable: true })
   resetPasswordToken: string;
 
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
+  role: UserRole;
+
   @OneToMany(() => Book, (book) => book.user)
   books: Book[];
+
+  @ManyToMany(() => Book, (book) => book.wishlistOwners)
+  @JoinTable()
+  wishlist: Book[];
 
   @Expose()
   get fullName(): string {

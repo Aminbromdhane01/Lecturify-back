@@ -1,6 +1,8 @@
 import { envConstants } from '@app/config/constants';
+import type { User } from '@app/modules/user/user.entity';
 
 import type { Book } from '../book.entity';
+import type { AddBookToWishlistDto } from '../dto/add-book-to-wishlist.dto';
 import type { CreateBookDto } from '../dto/create.book.dto';
 import type { GetBooksByPaginationDto } from '../dto/get-book-by-pagination.dto';
 import type { UpdateBookDto } from '../dto/update-book.dto';
@@ -30,4 +32,11 @@ export interface IBookService {
     page,
     keyword,
   }: GetBooksByPaginationDto): Promise<{ data: Book[]; count: number }>;
+  addBookToWishlist({
+    userId,
+    bookId,
+  }: AddBookToWishlistDto): Promise<User>;
+  getBooksByUserId(
+    userId: number,
+  ): Promise<{ data: Book[]; count: number }>;
 }
