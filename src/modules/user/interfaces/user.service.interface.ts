@@ -11,4 +11,6 @@ export interface IUserService {
   deleteUser(id: string): Promise<number>;
   updateUser(id: string, user: UpdateUserDto): Promise<User>;
   findUserbyToken(token: string): Promise<User>;
+  findUserWishlist(id: number): Promise<User | null>;
+  saveUser(user: User): Promise<User>;
 }

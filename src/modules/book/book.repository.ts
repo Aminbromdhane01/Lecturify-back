@@ -5,6 +5,7 @@ import { DataSource } from 'typeorm';
 import { Book } from './book.entity';
 import type { CreateBookDto } from './dto/create.book.dto';
 import type { GetBooksByPaginationDto } from './dto/get-book-by-pagination.dto';
+import type { PaginationResponseDto } from './dto/pagination-response.dto';
 import type { UpdateBookDto } from './dto/update-book.dto';
 import type { IBookRepository } from './interfaces/book.repository.interface';
 
@@ -27,7 +28,7 @@ export class BookReposotiroy
     itemPerPage,
     page,
     keyword,
-  }: GetBooksByPaginationDto): Promise<{ data: Book[]; count: number }> {
+  }: GetBooksByPaginationDto): Promise<PaginationResponseDto<Book>> {
     return this.findAll('Book', {
       itemsPerPage: itemPerPage,
       page,
@@ -51,11 +52,21 @@ export class BookReposotiroy
     itemPerPage,
     page,
     keyword,
-  }: GetBooksByPaginationDto): Promise<{ data: Book[]; count: number }> {
+  }: GetBooksByPaginationDto): Promise<PaginationResponseDto<Book>> {
     const [data, count] = await this.createQueryBuilder('Book')
       .where('title LIKE :keyword', { keyword: `%${keyword}%` })
       .skip(page * itemPerPage)
       .take(itemPerPage)
+      .getManyAndCount();
+
+    return { data, count };
+  }
+
+  async getBooksByUserId(
+    userId: number,
+  ): Promise<PaginationResponseDto<Book>> {
+    const [data, count] = await this.createQueryBuilder('book')
+      .where('book.userId = :userId', { userId })
       .getManyAndCount();
 
     return { data, count };

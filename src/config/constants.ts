@@ -173,6 +173,8 @@ export const envConstants = {
       KEYWORD_QUERY_NAME: 'keyword',
       KEYWORD_QUERY_DESCRIPTION: 'Keyword description',
     },
+    BOOK_ALREADY_ADDED_MESSAGE: 'Book Already Added',
+    BOOK_NOT_FOUND_MESSAGE: 'Book Not Found',
   },
   SentimentAnalysisModule: {
     MODEL_IDENTIFIER: 'MODEL_IDENTIFIER',

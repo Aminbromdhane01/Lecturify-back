@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -38,4 +39,7 @@ export class Book {
   @ManyToOne(() => User, (user) => user.books)
   @JoinColumn()
   user: User;
+
+  @ManyToMany(() => User, (user) => user.wishlist)
+  wishlistOwners: User[];
 }

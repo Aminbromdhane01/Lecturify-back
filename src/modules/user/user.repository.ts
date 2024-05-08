@@ -35,4 +35,15 @@ export class UserRepository
 
     return this.findOne({ where: { id } });
   }
+
+  async findUserWishlist(id: number): Promise<User | null> {
+    return this.createQueryBuilder('user')
+      .leftJoinAndSelect('user.wishlist', 'wishlist')
+      .where('user.id = :id', { id })
+      .getOne();
+  }
+
+  async saveUser(user: User): Promise<User> {
+    return this.save(user);
+  }
 }
