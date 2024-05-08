@@ -16,6 +16,7 @@ import type { Book } from './book.entity';
 import type { AddBookToWishlistDto } from './dto/add-book-to-wishlist.dto';
 import type { CreateBookDto } from './dto/create.book.dto';
 import type { GetBooksByPaginationDto } from './dto/get-book-by-pagination.dto';
+import type { PaginationResponseDto } from './dto/pagination-response.dto';
 import type { UpdateBookDto } from './dto/update-book.dto';
 import {
   BOOK_REPOSITORY,
@@ -51,7 +52,7 @@ export class BookService implements IBookService {
     itemPerPage,
     page,
     keyword,
-  }: GetBooksByPaginationDto): Promise<{ data: Book[]; count: number }> {
+  }: GetBooksByPaginationDto): Promise<PaginationResponseDto<Book>> {
     return this.bookRepository.getAll({
       itemPerPage,
       page,
@@ -90,7 +91,7 @@ export class BookService implements IBookService {
     itemPerPage,
     page,
     keyword,
-  }: GetBooksByPaginationDto): Promise<{ data: Book[]; count: number }> {
+  }: GetBooksByPaginationDto): Promise<PaginationResponseDto<Book>> {
     return this.bookRepository.findAllByTitle({
       itemPerPage,
       page,
@@ -125,7 +126,7 @@ export class BookService implements IBookService {
 
   async getBooksByUserId(
     userId: number,
-  ): Promise<{ data: Book[]; count: number }> {
+  ): Promise<PaginationResponseDto<Book>> {
     return this.bookRepository.getBooksByUserId(userId);
   }
 }

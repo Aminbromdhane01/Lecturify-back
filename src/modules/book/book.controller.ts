@@ -19,6 +19,8 @@ import type { Book } from './book.entity';
 import { AddBookToWishlistDto } from './dto/add-book-to-wishlist.dto';
 import { CreateBookDto } from './dto/create.book.dto';
 import { GetBooksByPaginationDto } from './dto/get-book-by-pagination.dto';
+import { GetBookByUserIdDto } from './dto/get-book-by-userid.dto';
+import type { PaginationResponseDto } from './dto/pagination-response.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import {
   ApiItemPerPageQuery,
@@ -62,7 +64,7 @@ export class BookController {
   @Get()
   async getAll(
     @Query() getBookDto: GetBooksByPaginationDto,
-  ): Promise<{ data: Book[]; count: number }> {
+  ): Promise<PaginationResponseDto<Book>> {
     return this.bookService.getAll(getBookDto);
   }
 
@@ -106,7 +108,7 @@ export class BookController {
   @Get('search/title')
   async searchByTitle(
     @Query() getBookDto: GetBooksByPaginationDto,
-  ): Promise<{ data: Book[]; count: number }> {
+  ): Promise<PaginationResponseDto<Book>> {
     return this.bookService.findAllByTitle(getBookDto);
   }
 
@@ -119,8 +121,8 @@ export class BookController {
 
   @Get('get/userId')
   async getBookbyuserId(
-    @Query() { userId }: { userId: number },
-  ): Promise<{ data: Book[]; count: number }> {
-    return this.bookService.getBooksByUserId(Number(userId));
+    @Query() { userId }: GetBookByUserIdDto,
+  ): Promise<PaginationResponseDto<Book>> {
+    return this.bookService.getBooksByUserId(userId);
   }
 }
