@@ -186,5 +186,7 @@ export const envConstants = {
   },
   CommentModule: {
     ABUSIVE_COMMENT_MESSAGE: 'Your Comment is Abusive',
+    COMMENT_REPOSITORY: 'COMMENT_REPOSITORY',
+    COMMENT_SERVICE: 'COMMENT_SERVICE',
   },
 };
