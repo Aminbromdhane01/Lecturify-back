@@ -5,9 +5,11 @@ import {
   JoinColumn,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { Comment } from '../comment/comment.entity';
 import { User } from '../user/user.entity';
 
 @Entity()
@@ -42,4 +44,7 @@ export class Book {
 
   @ManyToMany(() => User, (user) => user.wishlist)
   wishlistOwners: User[];
+
+  @OneToMany(() => Comment, (comment) => comment.book)
+  comments: Comment[];
 }

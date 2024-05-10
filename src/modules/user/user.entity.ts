@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 
 import { Book } from '../book/book.entity';
+import { Comment } from '../comment/comment.entity';
 export enum UserRole {
   USER = 'USER',
   ADMIN = 'ADMIN',
@@ -61,6 +62,9 @@ export class User {
   @ManyToMany(() => Book, (book) => book.wishlistOwners)
   @JoinTable()
   wishlist: Book[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 
   @Expose()
   get fullName(): string {
