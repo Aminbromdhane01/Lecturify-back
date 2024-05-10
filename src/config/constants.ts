@@ -184,4 +184,7 @@ export const envConstants = {
     SENTIMENT_NEUTRAL: 'Neutral',
     SENTIMENT_POSITIVE: 'Positive',
   },
+  CommentModule: {
+    ABUSIVE_COMMENT_MESSAGE: 'Your Comment is Abusive',
+  },
 };
