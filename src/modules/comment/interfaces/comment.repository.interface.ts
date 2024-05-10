@@ -7,7 +7,7 @@ export const COMMENT_REPOSITORY =
   envConstants.CommentModule.COMMENT_REPOSITORY;
 export interface ICommentRepository {
   postComment(createCommentdto: CreateCommentDto): Promise<Comment>;
-  getCommentbyBookId(bookId: number): Promise<Comment[]>;
+  getBookComments(bookId: number): Promise<Comment[]>;
   deleteComment(commentId: number): Promise<number>;
   updateComment(
     updateCommentdto: UpdateCommentDto,

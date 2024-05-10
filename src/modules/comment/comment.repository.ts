@@ -15,21 +15,21 @@ export class CommentRepository
     super(datasource, Comment);
   }
 
-  postComment(createCommentdto: CreateCommentDto): Promise<Comment> {
+  async postComment(createCommentdto: CreateCommentDto): Promise<Comment> {
     return this.createItem('Comment', createCommentdto);
   }
 
-  getCommentbyBookId(bookId: number): Promise<Comment[]> {
+  async getBookComments(bookId: number): Promise<Comment[]> {
     return this.createQueryBuilder()
       .where('bookId = :bookId', { bookId })
       .getMany();
   }
 
-  deleteComment(commentId: number): Promise<number> {
+  async deleteComment(commentId: number): Promise<number> {
     return this.deleteItem('Comment', commentId);
   }
 
-  updateComment(
+  async updateComment(
     updateCommentdto: UpdateCommentDto,
     commentId: number,
   ): Promise<Comment | null> {

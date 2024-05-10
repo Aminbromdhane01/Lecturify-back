@@ -7,7 +7,7 @@ import type { UpdateCommentDto } from '../dto/update-comment.dto';
 export const COMMENT_SERVICE = envConstants.CommentModule.COMMENT_SERVICE;
 export interface ICommentService {
   postComment(createCommentdto: CreateCommentDto): Promise<Comment>;
-  getCommentbyBookId(bookId: number): Promise<Comment[]>;
+  getBookComments(bookId: number): Promise<Comment[]>;
   deleteComment(commentId: number): Promise<number>;
   updateComment(
     updateCommentdto: UpdateCommentDto,

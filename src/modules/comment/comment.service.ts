@@ -40,11 +40,11 @@ export class CommentService implements ICommentService {
     return this.commentRepository.postComment(createCommentdto);
   }
 
-  getCommentbyBookId(bookId: number): Promise<Comment[]> {
-    return this.commentRepository.getCommentbyBookId(bookId);
+  async getBookComments(bookId: number): Promise<Comment[]> {
+    return this.commentRepository.getBookComments(bookId);
   }
 
-  deleteComment(commentId: number): Promise<number> {
+  async deleteComment(commentId: number): Promise<number> {
     return this.commentRepository.deleteComment(commentId);
   }
 
