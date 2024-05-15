@@ -192,4 +192,7 @@ export const envConstants = {
     COMMENT_SERVICE: 'COMMENT_SERVICE',
     TOXICITY_CLASSIFIER_OPTIONS: ['insult', 'toxicity', 'identity_attack'],
   },
+  AdminModule: {
+    ADMIN_STATISTICS_SERVICES: 'ADMIN_STATISTICS_SERVICES',
+  },
 };

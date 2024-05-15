@@ -2,6 +2,7 @@ import { envConstants } from '@app/config/constants';
 import { AbusiveCommentException } from '@app/exceptions/AbusiveCommentException';
 import type { Comment } from '@app/modules/comment/comment.entity';
 import type { CreateCommentDto } from '@app/modules/comment/dto/create-comment.dto';
+import type { SentimentCountResponseDto } from '@app/modules/comment/dto/sentiment-count-response.dto';
 import type { UpdateCommentDto } from '@app/modules/comment/dto/update-comment.dto';
 import {
   COMMENT_REPOSITORY,
@@ -78,7 +79,7 @@ export class CommentService implements ICommentService {
   }
 
   async getCommentsCountBySentiment(): Promise<
-    Array<{ sentiment: string; count: number }>
+    SentimentCountResponseDto[]
   > {
     return this.commentRepository.getCommentsCountBySentiment();
   }

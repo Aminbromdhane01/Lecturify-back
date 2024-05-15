@@ -1,6 +1,7 @@
 import { AbstractGenericRepository } from '@app/comon/baserepository';
 import { Comment } from '@app/modules/comment/comment.entity';
 import type { CreateCommentDto } from '@app/modules/comment/dto/create-comment.dto';
+import type { SentimentCountResponseDto } from '@app/modules/comment/dto/sentiment-count-response.dto';
 import type { UpdateCommentDto } from '@app/modules/comment/dto/update-comment.dto';
 import type { ICommentRepository } from '@app/modules/comment/interfaces/comment.repository.interface';
 import { Injectable } from '@nestjs/common';
@@ -36,8 +37,8 @@ export class CommentRepository
     return this.updateItem('Comment', commentId, updateCommentdto);
   }
 
-  getCommentsCountBySentiment(): Promise<
-    Array<{ sentiment: string; count: number }>
+  async getCommentsCountBySentiment(): Promise<
+    SentimentCountResponseDto[]
   > {
     return this.createQueryBuilder()
       .select('sentiment')
@@ -54,7 +55,7 @@ export class CommentRepository
     const oneWeekAgo = subWeeks(new Date(), 1);
 
     return this.createQueryBuilder('comment')
-      .where('createAt >= :oneWeekAgo', { oneWeekAgo })
+      .where('createdAt >= :oneWeekAgo', { oneWeekAgo })
       .getCount();
   }
 }
