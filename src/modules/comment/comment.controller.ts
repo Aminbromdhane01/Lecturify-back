@@ -43,4 +43,11 @@ export class CommentController {
   ): Promise<Comment | null> {
     return this.commentService.updateComment(updateBookDto, commentId);
   }
+
+  @Get('/get/group-by-sentiment')
+  getCommentsCountBySentiment(): Promise<
+    Array<{ sentiment: string; count: number }>
+  > {
+    return this.commentService.getCommentsCountBySentiment();
+  }
 }

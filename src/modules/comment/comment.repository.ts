@@ -4,6 +4,7 @@ import type { CreateCommentDto } from '@app/modules/comment/dto/create-comment.d
 import type { UpdateCommentDto } from '@app/modules/comment/dto/update-comment.dto';
 import type { ICommentRepository } from '@app/modules/comment/interfaces/comment.repository.interface';
 import { Injectable } from '@nestjs/common';
+import { subWeeks } from 'date-fns';
 import { DataSource } from 'typeorm';
 @Injectable()
 export class CommentRepository
@@ -33,5 +34,27 @@ export class CommentRepository
     commentId: number,
   ): Promise<Comment | null> {
     return this.updateItem('Comment', commentId, updateCommentdto);
+  }
+
+  getCommentsCountBySentiment(): Promise<
+    Array<{ sentiment: string; count: number }>
+  > {
+    return this.createQueryBuilder()
+      .select('sentiment')
+      .addSelect('COUNT(*)', 'count')
+      .groupBy('sentiment')
+      .getRawMany();
+  }
+
+  async getTotalCommentsCount(): Promise<number> {
+    return this.createQueryBuilder('comment').getCount();
+  }
+
+  async getCommentsAddedThisWeekCount(): Promise<number> {
+    const oneWeekAgo = subWeeks(new Date(), 1);
+
+    return this.createQueryBuilder('comment')
+      .where('createAt >= :oneWeekAgo', { oneWeekAgo })
+      .getCount();
   }
 }

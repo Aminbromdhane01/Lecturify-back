@@ -12,4 +12,9 @@ export interface ICommentService {
     updateCommentdto: UpdateCommentDto,
     commentId: number,
   ): Promise<Comment | null>;
+  getCommentsCountBySentiment(): Promise<
+    Array<{ sentiment: string; count: number }>
+  >;
+  getTotalCommentsCount(): Promise<number>;
+  getCommentsAddedThisWeekCount(): Promise<number>;
 }

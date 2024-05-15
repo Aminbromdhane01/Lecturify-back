@@ -47,6 +47,7 @@
     "class-validator": "^0.14.1",
     "cloudinary": "^2.1.0",
     "cookie-parser": "^1.4.6",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "extname": "^0.1.5",
     "mysql2": "^3.9.2",

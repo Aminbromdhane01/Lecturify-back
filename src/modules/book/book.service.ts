@@ -16,6 +16,8 @@ import type { Book } from './book.entity';
 import type { AddBookToWishlistDto } from './dto/add-book-to-wishlist.dto';
 import type { CreateBookDto } from './dto/create.book.dto';
 import type { GetBooksByPaginationDto } from './dto/get-book-by-pagination.dto';
+import type { GetBooksCountByMonthResponseDto } from './dto/get-books-count-by-month-response-dto';
+import type { BooksGroupedByGenreDtoResponse } from './dto/get-books-grouped-by-genre-response-dto';
 import type { PaginationResponseDto } from './dto/pagination-response.dto';
 import type { UpdateBookDto } from './dto/update-book.dto';
 import {
@@ -128,5 +130,25 @@ export class BookService implements IBookService {
     userId: number,
   ): Promise<PaginationResponseDto<Book>> {
     return this.bookRepository.getBooksByUserId(userId);
+  }
+
+  getTotalBooksCount(): Promise<number> {
+    return this.bookRepository.getTotalBooksCount();
+  }
+
+  getBooksAddedThisWeekCount(): Promise<number> {
+    return this.bookRepository.getBooksAddedThisWeekCount();
+  }
+
+  getBooksGroupedByGenre(): Promise<BooksGroupedByGenreDtoResponse[]> {
+    return this.bookRepository.getBooksGroupedByGenre();
+  }
+
+  getBooksCountByMonth(): Promise<GetBooksCountByMonthResponseDto[]> {
+    return this.bookRepository.getBooksCountByMonth();
+  }
+
+  getRecommandedBooks(): Promise<Book[]> {
+    return this.bookRepository.getRecommandedBooks();
   }
 }

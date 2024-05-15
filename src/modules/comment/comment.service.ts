@@ -8,12 +8,11 @@ import {
   ICommentRepository,
 } from '@app/modules/comment/interfaces/comment.repository.interface';
 import type { ICommentService } from '@app/modules/comment/interfaces/comment.service.interface';
-import { Inject } from '@nestjs/common';
-
 import {
   ISentimentalAnlysisService,
   SENTIMENTAL_ANALYSIS_SERVICE,
-} from '../sentimental-analysis/sentimental-analysis.service.interface';
+} from '@app/modules/sentimental-analysis/sentimental-analysis.service.interface';
+import { Inject } from '@nestjs/common';
 
 export class CommentService implements ICommentService {
   @Inject(COMMENT_REPOSITORY)
@@ -76,5 +75,19 @@ export class CommentService implements ICommentService {
       updateCommentdto,
       commentId,
     );
+  }
+
+  async getCommentsCountBySentiment(): Promise<
+    Array<{ sentiment: string; count: number }>
+  > {
+    return this.commentRepository.getCommentsCountBySentiment();
+  }
+
+  async getTotalCommentsCount(): Promise<number> {
+    return this.commentRepository.getTotalCommentsCount();
+  }
+
+  async getCommentsAddedThisWeekCount(): Promise<number> {
+    return this.commentRepository.getCommentsAddedThisWeekCount();
   }
 }
