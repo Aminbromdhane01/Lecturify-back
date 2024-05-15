@@ -4,7 +4,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 export class AbusiveCommentException extends HttpException {
   constructor() {
     super(
-      envConstants.CommentModule.ABUSIVE_COMMENT_MESSAGE,
+      envConstants.SentimentAnalysisModule.SENTIMENT_ABUSIVE,
       HttpStatus.FORBIDDEN,
     );
   }

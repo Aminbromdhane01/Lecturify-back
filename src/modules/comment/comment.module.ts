@@ -1,10 +1,9 @@
+import { CommentController } from '@app/modules/comment/comment.controller';
+import { COMMENT_REPOSITORY } from '@app/modules/comment/interfaces/comment.repository.interface';
+import { COMMENT_SERVICE } from '@app/modules/comment/interfaces/comment.service.interface';
+import { commentProviders } from '@app/modules/comment/providers/comment.provider';
+import { SentimentalAnalysisModule } from '@app/modules/sentimental-analysis/sentimental-analysis.module';
 import { Module } from '@nestjs/common';
-
-import { SentimentalAnalysisModule } from '../sentimental-analysis/sentimental-analysis.module';
-import { CommentController } from './comment.controller';
-import { COMMENT_REPOSITORY } from './interfaces/comment.repository.interface';
-import { COMMENT_SERVICE } from './interfaces/comment.service.interface';
-import { commentProviders } from './providers/comment.provider';
 
 @Module({
   imports: [SentimentalAnalysisModule],

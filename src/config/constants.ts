@@ -183,10 +183,13 @@ export const envConstants = {
     SENTIMENT_NEGATIVE: 'Negative',
     SENTIMENT_NEUTRAL: 'Neutral',
     SENTIMENT_POSITIVE: 'Positive',
+    THRESHOID: 0.9,
+    SENTIMENTAL_ANALYSIS_SERVICE: 'SENTIMENTAL_ANALYSIS_SERVICE',
   },
   CommentModule: {
     ABUSIVE_COMMENT_MESSAGE: 'Your Comment is Abusive',
     COMMENT_REPOSITORY: 'COMMENT_REPOSITORY',
     COMMENT_SERVICE: 'COMMENT_SERVICE',
+    TOXICITY_CLASSIFIER_OPTIONS: ['insult', 'toxicity', 'identity_attack'],
   },
 };

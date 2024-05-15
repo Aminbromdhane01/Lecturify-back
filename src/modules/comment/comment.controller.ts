@@ -1,3 +1,10 @@
+import { UpdateBookDto } from '@app/modules/book/dto/update-book.dto';
+import type { Comment } from '@app/modules/comment/comment.entity';
+import { CreateCommentDto } from '@app/modules/comment/dto/create-comment.dto';
+import {
+  COMMENT_SERVICE,
+  ICommentService,
+} from '@app/modules/comment/interfaces/comment.service.interface';
 import {
   Body,
   Controller,
@@ -8,14 +15,6 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-
-import { UpdateBookDto } from '../book/dto/update-book.dto';
-import type { Comment } from './comment.entity';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import {
-  COMMENT_SERVICE,
-  ICommentService,
-} from './interfaces/comment.service.interface';
 
 @Controller('comment')
 export class CommentController {
@@ -29,7 +28,7 @@ export class CommentController {
 
   @Get('getbybookid/:bookid')
   getByBookId(@Param('bookid') bookId: number): Promise<Comment[]> {
-    return this.commentService.getCommentbyBookId(bookId);
+    return this.commentService.getBookComments(bookId);
   }
 
   @Delete(':commentId')

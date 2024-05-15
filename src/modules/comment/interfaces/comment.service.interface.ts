@@ -1,8 +1,7 @@
 import { envConstants } from '@app/config/constants';
-
-import type { Comment } from '../comment.entity';
-import type { CreateCommentDto } from '../dto/create-comment.dto';
-import type { UpdateCommentDto } from '../dto/update-comment.dto';
+import type { Comment } from '@app/modules/comment/comment.entity';
+import type { CreateCommentDto } from '@app/modules/comment/dto/create-comment.dto';
+import type { UpdateCommentDto } from '@app/modules/comment/dto/update-comment.dto';
 
 export const COMMENT_SERVICE = envConstants.CommentModule.COMMENT_SERVICE;
 export interface ICommentService {

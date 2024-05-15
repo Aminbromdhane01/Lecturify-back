@@ -1,11 +1,10 @@
 import { AbstractGenericRepository } from '@app/comon/baserepository';
+import { Comment } from '@app/modules/comment/comment.entity';
+import type { CreateCommentDto } from '@app/modules/comment/dto/create-comment.dto';
+import type { UpdateCommentDto } from '@app/modules/comment/dto/update-comment.dto';
+import type { ICommentRepository } from '@app/modules/comment/interfaces/comment.repository.interface';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-
-import { Comment } from './comment.entity';
-import type { CreateCommentDto } from './dto/create-comment.dto';
-import type { UpdateCommentDto } from './dto/update-comment.dto';
-import type { ICommentRepository } from './interfaces/comment.repository.interface';
 @Injectable()
 export class CommentRepository
   extends AbstractGenericRepository<Comment>
