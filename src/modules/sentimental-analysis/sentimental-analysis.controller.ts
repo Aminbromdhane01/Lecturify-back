@@ -1,9 +1,10 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
-
 import {
   ISentimentalAnlysisService,
   SENTIMENTAL_ANALYSIS_SERVICE,
-} from './sentimental-analysis.service.interface';
+} from '@app/modules/sentimental-analysis/sentimental-analysis.service.interface';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
+
+import { AnalyseCommenteDto } from './dto/analyse-comment.dto';
 
 @Controller('comments')
 export class SentimentAnalysisController {
@@ -11,9 +12,16 @@ export class SentimentAnalysisController {
   private readonly sentimentAnalysisService: ISentimentalAnlysisService;
 
   @Post('analyze')
-  async analyzeComment(@Body() body: { comment: string }) {
-    const { comment } = body;
+  async analyzeComment(@Body() analysecommentDto: AnalyseCommenteDto) {
+    return this.sentimentAnalysisService.analyseComment(
+      analysecommentDto.text,
+    );
+  }
 
-    return this.sentimentAnalysisService.analyseComment(comment);
+  @Post('analyze-toxicity')
+  async analyseToxicity(@Body() analysecommentDto: AnalyseCommenteDto) {
+    return this.sentimentAnalysisService.classifyToxicity(
+      analysecommentDto.text,
+    );
   }
 }

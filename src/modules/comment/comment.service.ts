@@ -1,19 +1,19 @@
 import { envConstants } from '@app/config/constants';
 import { AbusiveCommentException } from '@app/exceptions/AbusiveCommentException';
-import { Inject } from '@nestjs/common';
-
-import {
-  ISentimentalAnlysisService,
-  SENTIMENTAL_ANALYSIS_SERVICE,
-} from '../sentimental-analysis/sentimental-analysis.service.interface';
-import type { Comment } from './comment.entity';
-import type { CreateCommentDto } from './dto/create-comment.dto';
-import type { UpdateCommentDto } from './dto/update-comment.dto';
+import type { Comment } from '@app/modules/comment/comment.entity';
+import type { CreateCommentDto } from '@app/modules/comment/dto/create-comment.dto';
+import type { SentimentCountResponseDto } from '@app/modules/comment/dto/sentiment-count-response.dto';
+import type { UpdateCommentDto } from '@app/modules/comment/dto/update-comment.dto';
 import {
   COMMENT_REPOSITORY,
   ICommentRepository,
-} from './interfaces/comment.repository.interface';
-import type { ICommentService } from './interfaces/comment.service.interface';
+} from '@app/modules/comment/interfaces/comment.repository.interface';
+import type { ICommentService } from '@app/modules/comment/interfaces/comment.service.interface';
+import {
+  ISentimentalAnlysisService,
+  SENTIMENTAL_ANALYSIS_SERVICE,
+} from '@app/modules/sentimental-analysis/sentimental-analysis.service.interface';
+import { Inject } from '@nestjs/common';
 
 export class CommentService implements ICommentService {
   @Inject(COMMENT_REPOSITORY)
@@ -24,18 +24,24 @@ export class CommentService implements ICommentService {
 
   async postComment(createCommentdto: CreateCommentDto): Promise<Comment> {
     const commentResult =
+      await this.sentimentalAnalysisService.classifyToxicity(
+        createCommentdto.text,
+      );
+
+    const isCommentToxic = commentResult.filteredData.some(
+      (data) => data.match !== false,
+    );
+
+    if (isCommentToxic) {
+      throw new AbusiveCommentException();
+    }
+
+    const analyseComment =
       await this.sentimentalAnalysisService.analyseComment(
         createCommentdto.text,
       );
 
-    if (
-      commentResult.sentiment ===
-      envConstants.SentimentAnalysisModule.SENTIMENT_ABUSIVE
-    ) {
-      throw new AbusiveCommentException();
-    }
-
-    createCommentdto.sentiment = commentResult.sentiment;
+    createCommentdto.sentiment = analyseComment.sentiment;
 
     return this.commentRepository.postComment(createCommentdto);
   }
@@ -70,5 +76,19 @@ export class CommentService implements ICommentService {
       updateCommentdto,
       commentId,
     );
+  }
+
+  async getCommentsCountBySentiment(): Promise<
+    SentimentCountResponseDto[]
+  > {
+    return this.commentRepository.getCommentsCountBySentiment();
+  }
+
+  async getTotalCommentsCount(): Promise<number> {
+    return this.commentRepository.getTotalCommentsCount();
+  }
+
+  async getCommentsAddedThisWeekCount(): Promise<number> {
+    return this.commentRepository.getCommentsAddedThisWeekCount();
   }
 }

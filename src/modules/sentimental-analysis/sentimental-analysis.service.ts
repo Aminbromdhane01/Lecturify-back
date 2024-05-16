@@ -1,19 +1,46 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-new-func
 const TransformersApi = new Function(
   'return import("@xenova/transformers")',
 )();
 
-import { envConstants } from '@app/config/constants';
-import { ConfigService } from '@nestjs/config';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import '@tensorflow/tfjs-backend-cpu';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import '@tensorflow/tfjs-backend-webgl';
 
-import type { AnalyseCommentResponseDto } from './dto/analyse-comment-response.dto';
-import type { ISentimentalAnlysisService } from './sentimental-analysis.service.interface';
+import { envConstants } from '@app/config/constants';
+import type { AnalyseCommentResponseDto } from '@app/modules/sentimental-analysis/dto/analyse-comment-response.dto';
+import type { AnalyseToxicityDto } from '@app/modules/sentimental-analysis/dto/analyse-toxicity-response.dto';
+import { StarRating } from '@app/modules/sentimental-analysis/sentiment.enum';
+import type { ISentimentalAnlysisService } from '@app/modules/sentimental-analysis/sentimental-analysis.service.interface';
+import { ConfigService } from '@nestjs/config';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import * as toxicity from '@tensorflow-models/toxicity';
 
 @Injectable()
 export class SentimentAnalysisService
   implements ISentimentalAnlysisService
 {
+  private model;
+
+  constructor() {
+    void this.loadModel();
+  }
+
+  private async loadModel() {
+    const threshold = envConstants.SentimentAnalysisModule.THRESHOID;
+
+    this.model = await toxicity.load(
+      threshold,
+      envConstants.CommentModule.TOXICITY_CLASSIFIER_OPTIONS,
+    );
+  }
+
   @Inject(ConfigService)
   configService: ConfigService;
 
@@ -46,30 +73,44 @@ export class SentimentAnalysisService
     };
   }
 
+  async classifyToxicity(comment: string): Promise<AnalyseToxicityDto> {
+    if (!this.model) {
+      throw new InternalServerErrorException();
+    }
+
+    const prediction = await this.model.classify(comment);
+    const filteredData = prediction.map((item) => ({
+      label: item.label,
+      match: item.results[0].match,
+    }));
+
+    return { filteredData } as unknown as AnalyseToxicityDto;
+  }
+
   private mapLabelToSentiment(label: string): string {
     switch (label) {
-      case '1 star': {
-        return envConstants.SentimentAnalysisModule.SENTIMENT_ABUSIVE;
-      }
-
-      case '2 star': {
+      case StarRating.OneStar: {
         return envConstants.SentimentAnalysisModule.SENTIMENT_NEGATIVE;
       }
 
-      case '3 stars': {
+      case StarRating.TwoStar: {
+        return envConstants.SentimentAnalysisModule.SENTIMENT_NEGATIVE;
+      }
+
+      case StarRating.ThreeStars: {
         return envConstants.SentimentAnalysisModule.SENTIMENT_NEUTRAL;
       }
 
-      case '4 stars': {
+      case StarRating.FourStars: {
         return envConstants.SentimentAnalysisModule.SENTIMENT_POSITIVE;
       }
 
-      case '5 stars': {
+      case StarRating.FiveStars: {
         return envConstants.SentimentAnalysisModule.SENTIMENT_POSITIVE;
       }
 
       default: {
-        return 'unknown';
+        return StarRating.Unknown;
       }
     }
   }

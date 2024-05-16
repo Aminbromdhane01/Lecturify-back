@@ -6,6 +6,7 @@ import { UserModule } from '@app/modules/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import { AdminDashboardModule } from './modules/admin-statistcs/admin-statistics.module';
 import { BcryptModule } from './modules/bcrypt/bcrypt.module';
 import { BookModule } from './modules/book/book.module';
 import { CommentModule } from './modules/comment/comment.module';
@@ -25,6 +26,7 @@ import { SentimentalAnalysisModule } from './modules/sentimental-analysis/sentim
     BookModule,
     SentimentalAnalysisModule,
     CommentModule,
+    AdminDashboardModule,
   ],
   controllers: [],
   providers: [],

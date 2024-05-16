@@ -125,4 +125,9 @@ export class BookController {
   ): Promise<PaginationResponseDto<Book>> {
     return this.bookService.getBooksByUserId(userId);
   }
+
+  @Get('get/recommanded-books')
+  async getRecommandedBooks(): Promise<Book[]> {
+    return this.bookService.getRecommandedBooks();
+  }
 }
