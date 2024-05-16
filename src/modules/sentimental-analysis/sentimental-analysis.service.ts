@@ -16,6 +16,7 @@ import '@tensorflow/tfjs-backend-webgl';
 import { envConstants } from '@app/config/constants';
 import type { AnalyseCommentResponseDto } from '@app/modules/sentimental-analysis/dto/analyse-comment-response.dto';
 import type { AnalyseToxicityDto } from '@app/modules/sentimental-analysis/dto/analyse-toxicity-response.dto';
+import { StarRating } from '@app/modules/sentimental-analysis/sentiment.enum';
 import type { ISentimentalAnlysisService } from '@app/modules/sentimental-analysis/sentimental-analysis.service.interface';
 import { ConfigService } from '@nestjs/config';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -88,28 +89,28 @@ export class SentimentAnalysisService
 
   private mapLabelToSentiment(label: string): string {
     switch (label) {
-      case '1 star': {
+      case StarRating.OneStar: {
         return envConstants.SentimentAnalysisModule.SENTIMENT_NEGATIVE;
       }
 
-      case '2 star': {
+      case StarRating.TwoStar: {
         return envConstants.SentimentAnalysisModule.SENTIMENT_NEGATIVE;
       }
 
-      case '3 stars': {
+      case StarRating.ThreeStars: {
         return envConstants.SentimentAnalysisModule.SENTIMENT_NEUTRAL;
       }
 
-      case '4 stars': {
+      case StarRating.FourStars: {
         return envConstants.SentimentAnalysisModule.SENTIMENT_POSITIVE;
       }
 
-      case '5 stars': {
+      case StarRating.FiveStars: {
         return envConstants.SentimentAnalysisModule.SENTIMENT_POSITIVE;
       }
 
       default: {
-        return 'unknown';
+        return StarRating.Unknown;
       }
     }
   }

@@ -89,7 +89,7 @@ export class BookService implements IBookService {
     return this.bookRepository.updateBook(id, book);
   }
 
-  findAllByTitle({
+  async findAllByTitle({
     itemPerPage,
     page,
     keyword,
@@ -132,23 +132,27 @@ export class BookService implements IBookService {
     return this.bookRepository.getBooksByUserId(userId);
   }
 
-  getTotalBooksCount(): Promise<number> {
+  async getTotalBooksCount(): Promise<number> {
     return this.bookRepository.getTotalBooksCount();
   }
 
-  getBooksAddedThisWeekCount(): Promise<number> {
+  async getBooksAddedThisWeekCount(): Promise<number> {
     return this.bookRepository.getBooksAddedThisWeekCount();
   }
 
-  getBooksGroupedByGenre(): Promise<BooksGroupedByGenreDtoResponse[]> {
+  async getBooksGroupedByGenre(): Promise<
+    BooksGroupedByGenreDtoResponse[]
+  > {
     return this.bookRepository.getBooksGroupedByGenre();
   }
 
-  getBooksCountByMonth(): Promise<GetBooksCountByMonthResponseDto[]> {
+  async getBooksCountByMonth(): Promise<
+    GetBooksCountByMonthResponseDto[]
+  > {
     return this.bookRepository.getBooksCountByMonth();
   }
 
-  getRecommandedBooks(): Promise<Book[]> {
+  async getRecommandedBooks(): Promise<Book[]> {
     return this.bookRepository.getRecommandedBooks();
   }
 }

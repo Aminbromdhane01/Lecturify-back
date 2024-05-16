@@ -22,22 +22,24 @@ export class CommentController {
   private readonly commentService: ICommentService;
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
+  async create(@Body() createCommentDto: CreateCommentDto) {
     return this.commentService.postComment(createCommentDto);
   }
 
   @Get('getbybookid/:bookid')
-  getByBookId(@Param('bookid') bookId: number): Promise<Comment[]> {
+  async getByBookId(@Param('bookid') bookId: number): Promise<Comment[]> {
     return this.commentService.getBookComments(bookId);
   }
 
   @Delete(':commentId')
-  deleteComment(@Param('commentId') commentId: number): Promise<number> {
+  async deleteComment(
+    @Param('commentId') commentId: number,
+  ): Promise<number> {
     return this.commentService.deleteComment(commentId);
   }
 
   @Patch(':commentId')
-  updateComment(
+  async updateComment(
     @Param('commentId') commentId: number,
     @Body() updateBookDto: UpdateBookDto,
   ): Promise<Comment | null> {

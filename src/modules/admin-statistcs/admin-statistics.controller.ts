@@ -48,7 +48,7 @@ export class AdminStatisticsController {
   }
 
   @Get('get-comments-counts-by-sentiments')
-  getCommentsCountBySentiment(): Promise<SentimentCountResponseDto[]> {
+  async getCommentsCountBySentiment(): Promise<SentimentCountResponseDto[]> {
     return this.adminStatisticsService.getCommentsCountBySentiment();
   }
 }

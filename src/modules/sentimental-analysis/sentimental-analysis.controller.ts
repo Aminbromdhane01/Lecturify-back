@@ -4,22 +4,24 @@ import {
 } from '@app/modules/sentimental-analysis/sentimental-analysis.service.interface';
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 
+import { AnalyseCommenteDto } from './dto/analyse-comment.dto';
+
 @Controller('comments')
 export class SentimentAnalysisController {
   @Inject(SENTIMENTAL_ANALYSIS_SERVICE)
   private readonly sentimentAnalysisService: ISentimentalAnlysisService;
 
   @Post('analyze')
-  async analyzeComment(@Body() body: { comment: string }) {
-    const { comment } = body;
-
-    return this.sentimentAnalysisService.analyseComment(comment);
+  async analyzeComment(@Body() analysecommentDto: AnalyseCommenteDto) {
+    return this.sentimentAnalysisService.analyseComment(
+      analysecommentDto.text,
+    );
   }
 
   @Post('analyze-toxicity')
-  async analyseToxicity(@Body() body: { comment: string }) {
-    const { comment } = body;
-
-    return this.sentimentAnalysisService.classifyToxicity(comment);
+  async analyseToxicity(@Body() analysecommentDto: AnalyseCommenteDto) {
+    return this.sentimentAnalysisService.classifyToxicity(
+      analysecommentDto.text,
+    );
   }
 }
