@@ -7,7 +7,6 @@ import type { ForgetPasswordResponseDto } from '@app/modules/auth/dto/forget-pas
 import type { ResetPasswordDto } from '@app/modules/auth/dto/reset-password.dto';
 import type { SignInDto } from '@app/modules/auth/dto/signin-auth.dto';
 import type { SignInResponseDto } from '@app/modules/auth/dto/signin-response.dto';
-import { getTokens } from '@app/modules/auth/helpers/GetToken';
 import type { IAuthService } from '@app/modules/auth/interfaces/auth.service.interface';
 import {
   BCRYPT_SERVICE,
@@ -28,6 +27,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
 import type { RefreshTokeneResponseDto } from './dto/refresh-token-response-dto';
+import { getTokens } from './helpers/getToken';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -57,7 +57,7 @@ export class AuthService implements IAuthService {
     );
     const hashedPassword = await this.bcryptService.hashData(
       password,
-      saltRounds,
+      saltRounds as number,
     );
 
     return this.userService.updateUser(user.id, {
@@ -67,7 +67,6 @@ export class AuthService implements IAuthService {
 
   async forgetPassword(email: string): Promise<ForgetPasswordResponseDto> {
     const user = await this.userService.findUserbyemail(email);
-    console.log(email);
 
     const expiresIn = this.configService.get(
       envConstants.AuthModule.RESET_TOKEN_EXPIRE_IN,
@@ -89,9 +88,9 @@ export class AuthService implements IAuthService {
     });
 
     const resetUrl =
-      this.configService.get(envConstants.MailModule.RESET_PASSWORD_URL) +
-      token;
-    console.log(resetUrl);
+      (this.configService.get<string>(
+        envConstants.MailModule.RESET_PASSWORD_URL,
+      ) as string) + token;
 
     const mailSent = this.mailService.sendResetmail({
       username: upadatedUser.firstname,
@@ -113,7 +112,6 @@ export class AuthService implements IAuthService {
       userExists = await this.userService.findUserbyemail(
         createUserDto.email,
       );
-      console.log(userExists);
     } catch (error) {
       if (error instanceof UserNotFoundException) {
         userExists = false;
@@ -124,12 +122,12 @@ export class AuthService implements IAuthService {
       throw new UserAlreadyExitsException();
     }
 
-    const saltRounds = await this.configService.get(
+    const saltRounds = this.configService.get<number>(
       envConstants.Bcrypt.SALT_ROUNDS,
     );
     const hashedPassword = await this.bcryptService.hashData(
       createUserDto.password,
-      saltRounds,
+      saltRounds as number,
     );
 
     const newUser = await this.userService.createUser({
@@ -164,13 +162,12 @@ export class AuthService implements IAuthService {
       throw new InvalidEmailOrPasswordExeption();
     }
 
-    const passwordMatches = await this.bcryptService.comparePasswords(
+    const isPasswordMatches = await this.bcryptService.comparePasswords(
       signInDto.password,
       user.password,
     );
-    console.log(passwordMatches);
 
-    if (!passwordMatches) {
+    if (!isPasswordMatches) {
       throw new InvalidEmailOrPasswordExeption();
     }
 
@@ -192,12 +189,12 @@ export class AuthService implements IAuthService {
   }
 
   async updateRefreshToken(id: string, token: string): Promise<User> {
-    const saltRounds = await this.configService.get(
+    const saltRounds = this.configService.get<number>(
       envConstants.Bcrypt.SALT_ROUNDS,
     );
     const hashedRefreshToken = await this.bcryptService.hashData(
       token,
-      saltRounds,
+      saltRounds as number,
     );
 
     return this.userService.updateUser(id, {
@@ -215,12 +212,10 @@ export class AuthService implements IAuthService {
       throw new AccessDeniedExeption();
     }
 
-    const refreshTokenMatches = await this.bcryptService.comparePasswords(
-      user.refreshToken,
-      token,
-    );
+    const isRefreshTokenMatches =
+      await this.bcryptService.comparePasswords(user.refreshToken, token);
 
-    if (!refreshTokenMatches) {
+    if (!isRefreshTokenMatches) {
       throw new AccessDeniedExeption();
     }
 
