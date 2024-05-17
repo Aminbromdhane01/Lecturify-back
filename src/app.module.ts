@@ -10,6 +10,7 @@ import { AdminDashboardModule } from './modules/admin-statistcs/admin-statistics
 import { BcryptModule } from './modules/bcrypt/bcrypt.module';
 import { BookModule } from './modules/book/book.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { NotificationModule } from './modules/notifications/notification.module';
 import { SentimentalAnalysisModule } from './modules/sentimental-analysis/sentimental-analysis.module';
 
 @Module({
@@ -27,6 +28,7 @@ import { SentimentalAnalysisModule } from './modules/sentimental-analysis/sentim
     SentimentalAnalysisModule,
     CommentModule,
     AdminDashboardModule,
+    NotificationModule,
   ],
   controllers: [],
   providers: [],
