@@ -10,6 +10,7 @@ import {
 
 import { Book } from '../book/book.entity';
 import { Comment } from '../comment/comment.entity';
+import { Notification } from '../notifications/notification.entity';
 export enum UserRole {
   USER = 'USER',
   ADMIN = 'ADMIN',
@@ -58,6 +59,9 @@ export class User {
 
   @OneToMany(() => Book, (book) => book.user)
   books: Book[];
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notifications: Notification[];
 
   @ManyToMany(() => Book, (book) => book.wishlistOwners)
   @JoinTable()
