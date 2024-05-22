@@ -27,4 +27,8 @@ export const validationSchema = Joi.object({
   NODE_ENV: Joi.string().required(),
   ANALYSIS_TYPE: Joi.string().required(),
   MODEL_IDENTIFIER: Joi.string().required(),
+  AZURE_ENDPOINT: Joi.string().required(),
+  AZURE_API_KEY: Joi.string().required(),
+  AZURE_TEXT_EMBEDDING_DEPLOYMENT_NAME: Joi.string().required(),
+  RECOMMANDATION_BOOK_DATASET_FROM_AZURE: Joi.string().required(),
 });

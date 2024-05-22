@@ -12,6 +12,7 @@ import { BookModule } from './modules/book/book.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { NotificationModule } from './modules/notifications/notification.module';
 import { SentimentalAnalysisModule } from './modules/sentimental-analysis/sentimental-analysis.module';
+import { BookRecommandationModule } from './modules/book-recommandation/book.recommandation.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { SentimentalAnalysisModule } from './modules/sentimental-analysis/sentim
     CommentModule,
     AdminDashboardModule,
     NotificationModule,
+    BookRecommandationModule,
   ],
   controllers: [],
   providers: [],
