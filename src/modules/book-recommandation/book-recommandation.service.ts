@@ -3,14 +3,20 @@ import type { IBookData } from '@app/modules/book-recommandation/book-data.type'
 import type { IBookRecommandationService } from '@app/modules/book-recommandation/book-recommandation.service.interface';
 import type { GetRecommandedBooksDto } from '@app/modules/book-recommandation/dto/get-recommended-books.dto';
 import { AzureKeyCredential, OpenAIClient } from '@azure/openai';
+import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
+import type { AxiosError } from 'axios';
 import * as numeric from 'numeric';
+import { catchError, map } from 'rxjs';
+
 @Injectable()
 export class BookRecommandationService
   implements IBookRecommandationService
 {
+  @Inject(HttpService)
+  private readonly httpService: HttpService;
+
   @Inject(ConfigService)
   private configService: ConfigService;
 
@@ -20,6 +26,7 @@ export class BookRecommandationService
     query: string[],
   ): Promise<GetRecommandedBooksDto[]> {
     await this.loadBookData();
+
     const queryEmbedding = await this.getQueryEmbedding(query);
 
     const distancesWithIndices = this.bookData.map((book, index) => {
@@ -45,22 +52,33 @@ export class BookRecommandationService
   }
 
   private async loadBookData() {
-    const response = await axios.get(
-      this.configService.get(
-        envConstants.BookRecommandtionModule
-          .RECOMMANDATION_BOOK_DATASET_FROM_AZURE,
-      ) as string,
+    const url = this.configService.get<string>(
+      envConstants.BookRecommandtionModule
+        .RECOMMANDATION_BOOK_DATASET_FROM_AZURE,
     );
 
-    const rawData = response.data.trim();
-    const jsonObjects = rawData.match(/({.*?})/g);
+    this.httpService
+      .get(url as string)
+      .pipe(
+        map((response) => response.data),
+        map((data) => {
+          const rawData = data.trim();
+          const jsonObjects = rawData.match(/({.*?})/g);
 
-    if (jsonObjects) {
-      for (const jsonObject of jsonObjects) {
-        const parsedData = JSON.parse(jsonObject as string) as IBookData;
-        this.bookData.push(parsedData);
-      }
-    }
+          if (jsonObjects) {
+            for (const jsonObject of jsonObjects) {
+              const parsedData = JSON.parse(
+                jsonObject as string,
+              ) as IBookData;
+              this.bookData.push(parsedData);
+            }
+          }
+        }),
+        catchError((error: AxiosError) => {
+          throw error;
+        }),
+      )
+      .subscribe();
   }
 
   private async getQueryEmbedding(query: string[]): Promise<number[]> {
