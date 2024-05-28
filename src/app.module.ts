@@ -1,18 +1,19 @@
 import { validationSchema } from '@app/config/env.validation.schema';
 import { DataBaseModule } from '@app/database/database.module';
+import { AdminDashboardModule } from '@app/modules/admin-statistcs/admin-statistics.module';
 import { AuthModule } from '@app/modules/auth/auth.module';
+import { BcryptModule } from '@app/modules/bcrypt/bcrypt.module';
+import { BookModule } from '@app/modules/book/book.module';
+import { BookRecommandationModule } from '@app/modules/book-recommandation/book.recommandation.module';
+import { CommentModule } from '@app/modules/comment/comment.module';
+import { EssayModule } from '@app/modules/essay/essay.module';
 import { MailModule } from '@app/modules/mail/mail.module';
+import { NotificationModule } from '@app/modules/notifications/notification.module';
+import { ReviewModule } from '@app/modules/review/review.module';
+import { SentimentalAnalysisModule } from '@app/modules/sentimental-analysis/sentimental-analysis.module';
 import { UserModule } from '@app/modules/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-
-import { AdminDashboardModule } from './modules/admin-statistcs/admin-statistics.module';
-import { BcryptModule } from './modules/bcrypt/bcrypt.module';
-import { BookModule } from './modules/book/book.module';
-import { CommentModule } from './modules/comment/comment.module';
-import { NotificationModule } from './modules/notifications/notification.module';
-import { SentimentalAnalysisModule } from './modules/sentimental-analysis/sentimental-analysis.module';
-import { BookRecommandationModule } from './modules/book-recommandation/book.recommandation.module';
 
 @Module({
   imports: [
@@ -31,6 +32,8 @@ import { BookRecommandationModule } from './modules/book-recommandation/book.rec
     AdminDashboardModule,
     NotificationModule,
     BookRecommandationModule,
+    EssayModule,
+    ReviewModule,
   ],
   controllers: [],
   providers: [],

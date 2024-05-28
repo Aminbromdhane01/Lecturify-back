@@ -29,6 +29,10 @@ export const envConstants = {
     EMAIL_NOT_SENT: 'Error in sending reset mail',
     EMAIL_SENT:
       'Your password reset request has been successfully processed. Please check your inbox for further instructions.',
+    RESET_PASSWORD_EMAIL_SUBJECT: 'Reset Password',
+    RESET_PASSWORD_EMAIL_TEMPLATE: './template/mail',
+    REVIEW_EMAIL_SUBJECT: 'Review Email',
+    REVIEW_EMAIL_TEMPLATE: './template/review.hbs',
   },
   AuthModule: {
     AUTH_SERVICE: 'AUTH_SERVICE',
@@ -207,5 +211,15 @@ export const envConstants = {
       'AZURE_TEXT_EMBEDDING_DEPLOYMENT_NAME',
     RECOMMANDATION_BOOK_DATASET_FROM_AZURE:
       'RECOMMANDATION_BOOK_DATASET_FROM_AZURE',
+  },
+  ReviewModule: {
+    REVIEW_REPOSITORY: 'REVIEW_REPOSITORY',
+    REVIEW_SERVICE: 'REVIEW_SERVICE',
+    ESSAY_REPOSITORY: 'ESSAY_REPOSITORY',
+    ESSAY_SERVICE: 'ESSAY_SERVICE',
+    NOTIFICATION_MESSAGE_ONE: 'Your essay titled ',
+    NOTIFOCATION_MESSAGGE_TWO: ' has been reviewed with a rating of ',
+    MIN_RATING_MESSAGE: 'Rating must be at least 0',
+    MAX_RATING_MESSAGE: 'Rating must be at most 5',
   },
 };
