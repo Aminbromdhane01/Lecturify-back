@@ -10,6 +10,7 @@ import {
 
 import { Book } from '../book/book.entity';
 import { Comment } from '../comment/comment.entity';
+import { Essay } from '../essay/essay.entity';
 import { Notification } from '../notifications/notification.entity';
 export enum UserRole {
   USER = 'USER',
@@ -69,6 +70,9 @@ export class User {
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
+
+  @OneToMany(() => Essay, (essay) => essay.user)
+  essays: Essay[];
 
   @Expose()
   get fullName(): string {
