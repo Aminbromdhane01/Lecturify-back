@@ -36,17 +36,17 @@ export class User {
   @Exclude()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   picture: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Exclude()
   gender: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   phonenumber: string;
 
-  @Column()
+  @Column({ nullable: true })
   adress: string;
 
   @Column({ nullable: true })

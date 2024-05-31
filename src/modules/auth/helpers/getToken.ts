@@ -5,6 +5,7 @@ import type { JwtService } from '@nestjs/jwt';
 export async function getTokens(
   userId: string,
   username: string,
+  role: string,
   jwtService: JwtService,
   configService: ConfigService,
 ): Promise<{ accessToken: string; refreshToken: string }> {
@@ -13,6 +14,7 @@ export async function getTokens(
       {
         sub: userId,
         username,
+        role,
       },
       {
         secret: configService.get<string>(
@@ -25,6 +27,7 @@ export async function getTokens(
       {
         sub: userId,
         username,
+        role,
       },
       {
         secret: configService.get<string>(

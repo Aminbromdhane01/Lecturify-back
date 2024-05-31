@@ -5,6 +5,7 @@ import type { IEssayRepository } from '@app/modules/essay/interfaces/essay.repos
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
+import type { GetEssayDto } from './dto/get-essay.dto';
 import type { UpdateEssayDto } from './dto/update-essay.dto';
 @Injectable()
 export class EssayRepository
@@ -30,10 +31,17 @@ export class EssayRepository
     return this.updateItem('Essay', essayId, updateEssayDto);
   }
 
-  async getUnreviewedEssay(): Promise<Essay[]> {
-    return this.createQueryBuilder()
+  async getUnreviewedEssay({
+    page,
+    itemPerPage,
+  }: GetEssayDto): Promise<{ essays: Essay[]; total: number }> {
+    const [essays, total] = await this.createQueryBuilder()
       .where('essay.isReviewd = :isReviewd', { isReviewd: false })
-      .getMany();
+      .skip((page - 1) * itemPerPage)
+      .take(itemPerPage)
+      .getManyAndCount();
+
+    return { essays, total };
   }
 
   async getUserEssays(userId: number): Promise<Essay[]> {

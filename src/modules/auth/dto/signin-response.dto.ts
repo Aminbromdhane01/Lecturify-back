@@ -23,4 +23,7 @@ export class SignInResponseDto {
     description: envConstants.AuthModule.FULL_NAME_DESCRIPTION,
   })
   fullName: string;
+
+  @ApiProperty()
+  role: string;
 }
