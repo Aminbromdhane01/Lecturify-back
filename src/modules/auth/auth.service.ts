@@ -142,6 +142,7 @@ export class AuthService implements IAuthService {
     const tokens = await getTokens(
       newUser.id,
       newUser.email,
+      newUser.role,
       this.jwtService,
       this.configService,
     );
@@ -152,6 +153,7 @@ export class AuthService implements IAuthService {
       refreshToken: tokens.refreshToken,
       fullName: `${newUser.firstname} ${newUser.lastname}`,
       email: newUser.email,
+      role: newUser.role,
     };
   }
 
@@ -174,6 +176,7 @@ export class AuthService implements IAuthService {
     const tokens = await getTokens(
       user.id,
       user.email,
+      user.role,
       this.jwtService,
       this.configService,
     );
@@ -185,6 +188,7 @@ export class AuthService implements IAuthService {
       refreshToken: tokens.refreshToken,
       fullName: `${user.firstname} ${user.lastname}`,
       email: user.email,
+      role: user.role,
     };
   }
 
@@ -222,6 +226,7 @@ export class AuthService implements IAuthService {
     const tokens = await getTokens(
       user.id,
       user.email,
+      user.role,
       this.jwtService,
       this.configService,
     );

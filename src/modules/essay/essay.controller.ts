@@ -12,8 +12,10 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 
+import { GetEssayDto } from './dto/get-essay.dto';
 import { UpdateEssayDto } from './dto/update-essay.dto';
 
 @Controller('essay')
@@ -40,12 +42,20 @@ export class EssayController {
   }
 
   @Get('unreviewed-essays')
-  async getUnreviewedEssay() {
-    return this.essayService.getUnreviewedEssay();
+  async getUnreviewedEssay(@Query() getEssayDto: GetEssayDto) {
+    return this.essayService.getUnreviewedEssay({
+      page: getEssayDto.page,
+      itemPerPage: getEssayDto.itemPerPage,
+    });
   }
 
   @Get('user-essay/:userId')
   async getUserEssay(@Param('userId') userId: number) {
     return this.getUserEssay(userId);
+  }
+
+  @Get('get-essay/:essayId')
+  async getEssayById(@Param('essayId') essayId: number) {
+    return this.essayService.getEssaybyId(essayId);
   }
 }

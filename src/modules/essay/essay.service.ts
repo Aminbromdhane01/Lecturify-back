@@ -7,6 +7,7 @@ import {
 import type { IEssayService } from '@app/modules/essay/interfaces/essay.service.interface';
 import { Inject } from '@nestjs/common';
 
+import type { GetEssayDto } from './dto/get-essay.dto';
 import type { UpdateEssayDto } from './dto/update-essay.dto';
 
 export class EssayService implements IEssayService {
@@ -28,8 +29,11 @@ export class EssayService implements IEssayService {
     return this.essayRepository.updateEssay(essayId, updateEssayDto);
   }
 
-  async getUnreviewedEssay(): Promise<Essay[]> {
-    return this.essayRepository.getUnreviewedEssay();
+  async getUnreviewedEssay({
+    page,
+    itemPerPage,
+  }: GetEssayDto): Promise<{ essays: Essay[]; total: number }> {
+    return this.essayRepository.getUnreviewedEssay({ page, itemPerPage });
   }
 
   async getUserEssays(userId: number): Promise<Essay[]> {
