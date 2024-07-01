@@ -10,10 +10,18 @@ import type { IUserService } from '@app/modules/user/interfaces/user.service.int
 import type { User } from '@app/modules/user/user.entity';
 import { Inject, Injectable } from '@nestjs/common';
 
+import {
+  FILE_UPLOAD_SERVICE,
+  IFileUploadService,
+} from '../file-upload/interfaces/file-upload.service.interface';
+
 @Injectable()
 export class UserService implements IUserService {
   @Inject(USER_REPOSITORY)
   private readonly userRepository: IUserRepository;
+
+  @Inject(FILE_UPLOAD_SERVICE)
+  private readonly fileUploadService: IFileUploadService;
 
   createUser(user: CreateUserDto): Promise<User> {
     return this.userRepository.createUser(user);
@@ -55,7 +63,16 @@ export class UserService implements IUserService {
     return this.userRepository.deleteItem('u', Number(id));
   }
 
-  async updateUser(id: string, user: UpdateUserDto): Promise<User> {
+  async updateUser(
+    id: string,
+    user: UpdateUserDto,
+    picture?: Express.Multer.File | undefined,
+  ): Promise<User> {
+    if (picture) {
+      const file = await this.fileUploadService.uploadFile(picture);
+      user.picture = file?.url;
+    }
+
     const UpadatedUser = await this.userRepository.updateUser(id, user);
 
     if (!UpadatedUser) {

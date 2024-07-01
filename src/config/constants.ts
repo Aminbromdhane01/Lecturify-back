@@ -66,6 +66,8 @@ export const envConstants = {
     INVALID_TOKEN_RESPONSE_MESSAGE: 'Invalid token',
     FAILED_TO_UPDATE_USER_MESSAGE:
       'Failed to update user. Please try again later',
+    TOKEN_EXPIRED: 'TokenExpiredError',
+    JWT_ERROR: 'JsonWebTokenError',
   },
   ErrorMessage: {
     BAD_REQUEST: 'Bad Request',

@@ -3,9 +3,11 @@ import { USER_SERVICE } from '@app/modules/user/interfaces/user.service.interfac
 import { UserController } from '@app/modules/user/user.controller';
 import { Module } from '@nestjs/common';
 
+import { CloudinaryModule } from '../file-upload/file-upload.module';
 import { userProviders } from './providers/user.provider';
 
 @Module({
+  imports: [CloudinaryModule],
   controllers: [UserController],
   providers: [...userProviders],
   exports: [USER_SERVICE, USER_REPOSITORY],

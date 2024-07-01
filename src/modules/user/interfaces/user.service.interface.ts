@@ -9,7 +9,11 @@ export interface IUserService {
   findUserbyid(id: string): Promise<User>;
   findUserbyemail(email: string): Promise<User | null>;
   deleteUser(id: string): Promise<number>;
-  updateUser(id: string, user: UpdateUserDto): Promise<User>;
+  updateUser(
+    id: string,
+    user: UpdateUserDto,
+    picture?: Express.Multer.File | undefined,
+  ): Promise<User>;
   findUserbyToken(token: string): Promise<User>;
   findUserWishlist(id: number): Promise<User | null>;
   saveUser(user: User): Promise<User>;

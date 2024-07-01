@@ -14,10 +14,12 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import type { User } from './user.entity';
 
@@ -49,9 +51,14 @@ export class UserController {
     return this.userService.findUserbyemail(email);
   }
 
+  @UseInterceptors(FileInterceptor('file'))
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.updateUser(id, updateUserDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile('file') file: Express.Multer.File | undefined,
+  ) {
+    return this.userService.updateUser(id, updateUserDto, file);
   }
 
   @Delete(':id')

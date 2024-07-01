@@ -1,3 +1,4 @@
+import { AccessTokenGuard } from '@app/guards/access-token.guard';
 import {
   Body,
   Controller,
@@ -9,6 +10,7 @@ import {
   Post,
   Query,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -32,6 +34,7 @@ import {
   BOOK_SERVICE,
   IBookService,
 } from './interfaces/book.service.interface';
+
 @ApiTags('cats')
 @Controller('books')
 export class BookController {

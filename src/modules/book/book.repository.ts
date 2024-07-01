@@ -57,6 +57,7 @@ export class BookReposotiroy
   }: GetBooksByPaginationDto): Promise<PaginationResponseDto<Book>> {
     const [data, count] = await this.createQueryBuilder('Book')
       .where('title LIKE :keyword', { keyword: `%${keyword}%` })
+      .orderBy('date', 'DESC')
       .skip(page * itemPerPage)
       .take(itemPerPage)
       .getManyAndCount();
