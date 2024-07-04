@@ -1,4 +1,3 @@
-import { AccessTokenGuard } from '@app/guards/access-token.guard';
 import {
   Body,
   Controller,
@@ -10,7 +9,6 @@ import {
   Post,
   Query,
   UploadedFiles,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -132,5 +130,10 @@ export class BookController {
   @Get('get/recommanded-books')
   async getRecommandedBooks(): Promise<Book[]> {
     return this.bookService.getRecommandedBooks();
+  }
+
+  @Get('get/wishlist/:id')
+  async getUserWishlist(@Param('id') userId: number): Promise<Book[]> {
+    return this.bookService.getUserWishlist(userId);
   }
 }

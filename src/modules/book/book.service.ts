@@ -155,4 +155,8 @@ export class BookService implements IBookService {
   async getRecommandedBooks(): Promise<Book[]> {
     return this.bookRepository.getRecommandedBooks();
   }
+
+  async getUserWishlist(userId: number): Promise<Book[]> {
+    return this.bookRepository.getUserWishlist(userId);
+  }
 }

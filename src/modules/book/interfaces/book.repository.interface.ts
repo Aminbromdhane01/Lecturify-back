@@ -29,4 +29,5 @@ export interface IBookRepository {
   getBooksGroupedByGenre(): Promise<BooksGroupedByGenreDtoResponse[]>;
   getBooksCountByMonth(): Promise<GetBooksCountByMonthResponseDto[]>;
   getRecommandedBooks(): Promise<Book[]>;
+  getUserWishlist(userId: number): Promise<Book[]>;
 }

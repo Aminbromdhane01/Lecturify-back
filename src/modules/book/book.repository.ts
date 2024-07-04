@@ -117,4 +117,11 @@ export class BookReposotiroy
       .orderBy('positive_comment_count', 'DESC')
       .getMany();
   }
+
+  async getUserWishlist(userId: number): Promise<Book[]> {
+    return this.createQueryBuilder('book')
+      .leftJoin('book.wishlistOwners', 'user')
+      .where('user.id = :userId', { userId })
+      .getMany();
+  }
 }
