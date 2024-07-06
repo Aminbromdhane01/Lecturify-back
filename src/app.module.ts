@@ -12,8 +12,13 @@ import { NotificationModule } from '@app/modules/notifications/notification.modu
 import { ReviewModule } from '@app/modules/review/review.module';
 import { SentimentalAnalysisModule } from '@app/modules/sentimental-analysis/sentimental-analysis.module';
 import { UserModule } from '@app/modules/user/user.module';
-import { Module } from '@nestjs/common';
+import type { MiddlewareConsumer } from '@nestjs/common';
+import { Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+
+import { ScriptProcessorMiddleware } from './middlewares/script-processor.middleware';
+import { AuthorModule } from './modules/author/author.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -34,8 +39,12 @@ import { ConfigModule } from '@nestjs/config';
     BookRecommandationModule,
     EssayModule,
     ReviewModule,
+    CategoryModule,
+    AuthorModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  
+}

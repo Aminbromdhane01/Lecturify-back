@@ -1,0 +1,12 @@
+import { IsNotEmptyWithMessage } from '@app/decorators/is-notempty-with-message.decorator';
+import { IsStringWithMessage } from '@app/decorators/is-string-with-message.decorator';
+
+export class CreateAuthorDto {
+  @IsStringWithMessage()
+  @IsNotEmptyWithMessage()
+  name: string;
+
+  @IsStringWithMessage()
+  @IsNotEmptyWithMessage()
+  biography: string;
+}

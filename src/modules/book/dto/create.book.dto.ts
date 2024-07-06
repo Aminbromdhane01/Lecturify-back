@@ -39,4 +39,10 @@ export class CreateBookDto {
     example: envConstants.BookModule.USER_ID_EXAMPLE,
   })
   userId: number;
+
+  authorId: number;
+
+  @IsNotEmptyWithMessage()
+  @IsStringWithMessage()
+  description: string;
 }

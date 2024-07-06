@@ -224,4 +224,7 @@ export const envConstants = {
     MIN_RATING_MESSAGE: 'Rating must be at least 0',
     MAX_RATING_MESSAGE: 'Rating must be at most 5',
   },
+  MiddlewareValidation: {
+    JS_INJECTION: 'JavaScript injection detected',
+  },
 };

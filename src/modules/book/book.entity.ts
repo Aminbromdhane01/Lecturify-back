@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { Author } from '../author/author.entity';
 import { Comment } from '../comment/comment.entity';
 import { User } from '../user/user.entity';
 
@@ -26,6 +27,9 @@ export class Book {
   @Column()
   image: string;
 
+  @Column()
+  description: string;
+
   @CreateDateColumn()
   date: Date;
 
@@ -38,13 +42,26 @@ export class Book {
   @Column()
   userId: number;
 
+  @Column()
+  authorId: number;
+
   @ManyToOne(() => User, (user) => user.books)
   @JoinColumn()
   user: User;
 
-  @ManyToMany(() => User, (user) => user.wishlist)
+  @ManyToMany(() => User, (user) => user.wishlist, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   wishlistOwners: User[];
 
-  @OneToMany(() => Comment, (comment) => comment.book)
+  @OneToMany(() => Comment, (comment) => comment.book, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   comments: Comment[];
+
+  @ManyToOne(() => Author, (author) => author.books)
+  @JoinColumn()
+  author: Author;
 }

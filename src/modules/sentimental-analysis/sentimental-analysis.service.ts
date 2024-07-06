@@ -49,20 +49,13 @@ export class SentimentAnalysisService
   ): Promise<AnalyseCommentResponseDto> {
     const { pipeline } = await TransformersApi;
 
-    const sentimentAnalyzer = await pipeline(
-      this.configService.get<string>(
-        envConstants.SentimentAnalysisModule.ANALYSIS_TYPE,
-      ),
-      this.configService.get<string>(
-        envConstants.SentimentAnalysisModule.MODEL_IDENTIFIER,
-      ),
-    );
+    const sentimentAnalyzer = await pipeline('sentiment-analysis');
 
     const result = await sentimentAnalyzer(comment);
 
     if ('label' in result[0] && 'score' in result[0]) {
       return {
-        sentiment: this.mapLabelToSentiment(result[0].label as string),
+        sentiment: result[0].label as string,
         score: result[0].score,
       };
     }

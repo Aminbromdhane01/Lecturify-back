@@ -21,8 +21,9 @@ export class CommentRepository
   }
 
   async getBookComments(bookId: number): Promise<Comment[]> {
-    return this.createQueryBuilder()
+    return this.createQueryBuilder('comment')
       .where('bookId = :bookId', { bookId })
+      .leftJoinAndSelect('comment.user', 'user')
       .getMany();
   }
 
