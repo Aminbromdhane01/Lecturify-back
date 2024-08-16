@@ -26,7 +26,8 @@ export class BookRecommandationService
     query: string[],
   ): Promise<GetRecommandedBooksDto[]> {
     await this.loadBookData();
-
+    console.log('maped');
+    
     const queryEmbedding = await this.getQueryEmbedding(query);
 
     const distancesWithIndices = this.bookData.map((book, index) => {
